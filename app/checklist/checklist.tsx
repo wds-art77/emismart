@@ -44,19 +44,18 @@ export function Checklist() {
       <aside className="no-print space-y-6">
         <div>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-navy-800/60">Country</h2>
-          <div className="mt-3 flex flex-col gap-2">
+          <select
+            aria-label="Country"
+            value={code}
+            onChange={(e) => setCode(e.target.value as CountryCode)}
+            className="mt-3 w-full rounded-xl border border-navy-900/20 bg-white px-4 py-3 text-sm font-medium focus:border-navy-900 focus:outline-none"
+          >
             {countries.map((c) => (
-              <button
-                key={c.code}
-                onClick={() => setCode(c.code)}
-                className={`rounded-xl border px-4 py-3 text-left text-sm font-medium transition ${
-                  c.code === code ? "border-navy-900 bg-navy-900 text-white" : "border-navy-900/15 hover:border-navy-900/40"
-                }`}
-              >
+              <option key={c.code} value={c.code}>
                 {c.flag} {c.name}
-              </button>
+              </option>
             ))}
-          </div>
+          </select>
         </div>
         <div>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-navy-800/60">Party</h2>

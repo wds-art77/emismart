@@ -122,20 +122,22 @@ export function Intake() {
         {step === 0 && (
           <div className="mt-6 space-y-6">
             <div>
-              <span className={label}>Destination country</span>
-              <div className="mt-2 grid gap-2 sm:grid-cols-5">
+              <label className={label} htmlFor="country">Destination country</label>
+              <select
+                id="country"
+                value={file.country}
+                onChange={(e) => update({ country: e.target.value as CountryCode })}
+                className={input}
+              >
+                <option value="" disabled>
+                  Choose one of the 27 EU member states
+                </option>
                 {countries.map((c) => (
-                  <button
-                    key={c.code}
-                    onClick={() => update({ country: c.code })}
-                    className={`rounded-xl border px-3 py-3 text-sm font-medium transition ${
-                      file.country === c.code ? "border-navy-900 bg-navy-900 text-white" : "border-navy-900/15 hover:border-navy-900/40"
-                    }`}
-                  >
+                  <option key={c.code} value={c.code}>
                     {c.flag} {c.name}
-                  </button>
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
             <div>
               <span className={label}>I am the</span>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Container } from "./ui";
 import { Logo } from "./nav";
-import { countries } from "@/lib/countries";
+import { regions } from "@/lib/countries";
 
 export function Footer() {
   return (
@@ -10,16 +10,19 @@ export function Footer() {
         <div className="md:col-span-1">
           <Logo dark />
           <p className="mt-4 text-sm leading-relaxed text-white/70">
-            Streamlined, digital single permit applications for Belgium, the Netherlands, France, Germany and Luxembourg.
+            Streamlined, digital work and residence permit applications for all 27 EU member states.
           </p>
         </div>
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-wider text-white/60">Countries</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            {countries.map((c) => (
-              <li key={c.code}>
-                <Link href={`/countries/${c.code}`} className="text-white/85 hover:text-white">
-                  {c.flag} {c.name}
+            <li>
+              <Link href="/countries" className="text-white/85 hover:text-white">All 27 EU member states</Link>
+            </li>
+            {regions.map((r) => (
+              <li key={r}>
+                <Link href={`/countries#${r.toLowerCase().replace(/ /g, "-")}`} className="text-white/85 hover:text-white">
+                  {r}
                 </Link>
               </li>
             ))}

@@ -17,7 +17,7 @@ export default function AboutPage() {
             Digital platforms have made United States immigration more understandable for families and employers. Europe
             has had a Single Permit Directive since 2011 and a recast since 2024, yet the lived experience remains five
             different procedures, in five administrative cultures, documented in five sets of languages. Emismart was
-            conceived to close that gap, starting with the Benelux countries, France and Germany.
+            conceived to close that gap, across all twenty-seven member states.
           </Lead>
         </Container>
       </Section>
@@ -30,7 +30,7 @@ export default function AboutPage() {
               <li><strong>Technology for routine, judgment for complexity.</strong> Standard files move fast. Edge cases go to a lawyer.</li>
               <li><strong>Transparency on fees.</strong> Government fees are shown separately and never marked up.</li>
               <li><strong>Privacy by design.</strong> Immigration files contain the most sensitive personal data there is. Data minimisation, EU hosting and GDPR compliance are structural, not optional.</li>
-              <li><strong>Multilingual by default.</strong> French, Dutch, German and English are the working languages of the five jurisdictions, and of the platform.</li>
+              <li><strong>Multilingual by default.</strong> English, French, Dutch and German first, then the other official languages of the Union.</li>
             </ul>
           </div>
           <div id="contact">
@@ -41,13 +41,13 @@ export default function AboutPage() {
               at launch.
             </p>
             <div className="mt-6 rounded-2xl border border-navy-900/10 bg-white p-6 text-sm">
-              <p className="font-semibold">Pilot scope</p>
+              <p className="font-semibold">Scope</p>
               <ul className="mt-2 space-y-1 text-navy-800/85">
-                <li>Belgium: single permit, all Regions</li>
-                <li>Netherlands: GVVA and highly skilled migrant route</li>
-                <li>France: work authorisation and VLS-TS salarié</li>
-                <li>Germany: §§ 18a, 18b, 18g with fast-track procedure</li>
-                <li>Luxembourg: salaried worker authorisation and EU Blue Card</li>
+                <li>All 27 EU member states, with country guides, checklists and eligibility logic</li>
+                <li>Single permit procedures in the 25 states bound by Directive 2011/98/EU and its 2024 recast</li>
+                <li>National work permit schemes in Denmark and Ireland</li>
+                <li>EU Blue Card and national highly qualified routes as alternatives in every guide</li>
+                <li>Launch depth first in Belgium, the Netherlands, France, Germany and Luxembourg</li>
               </ul>
             </div>
           </div>

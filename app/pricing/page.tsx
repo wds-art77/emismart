@@ -11,7 +11,7 @@ const tiers = [
     name: "Explore",
     price: "Free",
     tagline: "For anyone checking their options.",
-    features: ["Eligibility check", "Country guides for five countries", "Document checklists", "Local case file preview"],
+    features: ["Eligibility check", "Country guides for all 27 EU member states", "Document checklists", "Local case file preview"],
     cta: { label: "Start free", href: "/eligibility" },
     highlight: false,
   },
@@ -59,9 +59,9 @@ export default function PricingPage() {
         <Eyebrow>Pricing</Eyebrow>
         <H1>Simple plans. Government fees are always shown separately.</H1>
         <Lead>
-          Prices will be published at launch. Emismart never bundles official fees into its own price: the federal fee in
-          Belgium, the IND fee, the French tax on the VLS-TS, the German visa and fast-track fees and the Luxembourg
-          chancery fee are paid directly to the authorities and listed transparently in the case file.
+          Prices will be published at launch. Emismart never bundles official fees into its own price: visa fees,
+          permit fees and administrative charges are paid directly to the authorities of the country concerned and
+          listed transparently in the case file.
         </Lead>
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {tiers.map((t) => (

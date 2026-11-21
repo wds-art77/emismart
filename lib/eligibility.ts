@@ -1,4 +1,4 @@
-import type { CountryCode } from "./countries";
+import { countryByCode, type CountryCode } from "./countries";
 
 export type Answers = {
   nationality: "eu" | "third" | "";
@@ -98,9 +98,12 @@ export function evaluate(a: Answers): Outcome {
       de: "EU Blue Card (§ 18g AufenthG). Fastest path to settlement; the fast-track procedure can be combined with it.",
       lu: "EU Blue Card issued by the Immigration Directorate. The ADEM vacancy declaration is still required, the market test is not.",
     };
+    const c = countryByCode(a.country);
+    const blue = c?.alternativeRoutes.find((r) => /blue card/i.test(r.name));
+    const fallback = blue ? `${blue.name} in ${c?.name}. ${blue.summary}` : `EU Blue Card in ${c?.name ?? "the destination country"}.`;
     return {
       headline: "Likely eligible for a highly qualified route",
-      route: map[a.country] ?? "EU Blue Card",
+      route: map[a.country] ?? fallback,
       confidence: "medium",
       summary:
         "A university degree combined with a salary above the national highly qualified threshold usually opens a route that is faster than the standard single permit and carries better family and mobility rights.",
@@ -151,9 +154,13 @@ export function evaluate(a: Answers): Outcome {
     lu: "Luxembourg temporary authorisation to stay as a salaried worker, after the ADEM vacancy declaration",
   };
 
+  const c = countryByCode(a.country);
+  const generic = c
+    ? `${c.permitName} in ${c.name} (${c.localName}). ${c.whoApplies.split(".")[0]}.`
+    : "Single permit";
   return {
-    headline: "Likely eligible for the single permit route",
-    route: routeName[a.country] ?? "Single permit",
+    headline: c && !c.singlePermitDirective ? "Likely eligible for the national work permit route" : "Likely eligible for the single permit route",
+    route: routeName[a.country] ?? generic,
     confidence: a.shortage === "unknown" || a.salary === "unknown" ? "low" : "medium",
     summary: `${lmt}${inside} ${
       a.contract === "cdd"

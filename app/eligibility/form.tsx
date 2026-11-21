@@ -182,6 +182,26 @@ export function EligibilityForm() {
       </div>
       <h2 className="mt-8 text-2xl font-semibold">{current.label}</h2>
       {current.help && <p className="mt-2 text-sm text-navy-800/70">{current.help}</p>}
+      {current.key === "country" ? (
+        <div className="mt-6">
+          <label htmlFor="country-select" className="sr-only">Destination country</label>
+          <select
+            id="country-select"
+            defaultValue=""
+            onChange={(e) => e.target.value && setAnswers({ ...answers, country: e.target.value as CountryCode })}
+            className="w-full rounded-xl border border-navy-900/20 bg-white px-4 py-4 text-sm font-medium focus:border-navy-900 focus:outline-none"
+          >
+            <option value="" disabled>
+              Choose one of the 27 EU member states
+            </option>
+            {current.options.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : (
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         {current.options.map((o) => (
           <button
@@ -193,6 +213,7 @@ export function EligibilityForm() {
           </button>
         ))}
       </div>
+      )}
       {index > 0 && (
         <button
           onClick={() => {

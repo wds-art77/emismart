@@ -59,13 +59,14 @@ export default function HowItWorksPage() {
       <Section tone="sand">
         <Container>
           <Eyebrow>Comparison</Eyebrow>
-          <H2>Where the five countries differ</H2>
+          <H2>Where the twenty-seven countries differ</H2>
           <div className="mt-10 overflow-x-auto rounded-2xl border border-navy-900/10 bg-white">
             <table className="w-full min-w-[800px] text-left text-sm">
               <thead className="bg-navy-50 text-xs uppercase tracking-wider text-navy-800/70">
                 <tr>
                   <th className="px-4 py-3">Country</th>
                   <th className="px-4 py-3">Permit</th>
+                  <th className="px-4 py-3">Directive</th>
                   <th className="px-4 py-3">Who applies</th>
                   <th className="px-4 py-3">Labour market test</th>
                   <th className="px-4 py-3">Decision period</th>
@@ -78,6 +79,7 @@ export default function HowItWorksPage() {
                       {c.flag} {c.name}
                     </td>
                     <td className="px-4 py-3 text-navy-800/85">{c.localName}</td>
+                    <td className="px-4 py-3 text-navy-800/85">{c.singlePermitDirective ? "Single permit" : "National scheme"}</td>
                     <td className="px-4 py-3 text-navy-800/85">{c.whoApplies.split(".")[0]}.</td>
                     <td className="px-4 py-3 text-navy-800/85">{c.labourMarketTest.split(":")[0].split(".")[0]}.</td>
                     <td className="px-4 py-3 text-navy-800/85">{c.decisionPeriod.split(".")[0]}.</td>

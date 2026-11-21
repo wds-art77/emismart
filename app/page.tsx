@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button, Card, Container, Disclaimer, Eyebrow, H1, H2, Lead, Pill, Section } from "@/components/ui";
-import { countries, euRecast } from "@/lib/countries";
+import { countries, countriesByRegion, euRecast, regions } from "@/lib/countries";
 
 const pillars = [
   {
@@ -36,10 +36,10 @@ export default function HomePage() {
         <Container className="relative">
           <Eyebrow>Work migration to Europe, digitalised</Eyebrow>
           <H1 className="mt-4 max-w-3xl">
-            The simplest way to obtain a single permit in Belgium, the Netherlands, France, Germany and Luxembourg.
+            The simplest way to obtain a work and residence permit in any of the 27 EU member states.
           </H1>
           <Lead>
-            Emismart turns fragmented national procedures into one guided, bilingual case file shared by employer,
+            Emismart turns twenty-seven national procedures into one guided, multilingual case file shared by employer,
             employee and counsel. Think of it as the European answer to the digital immigration platforms that already
             exist for the United States.
           </Lead>
@@ -49,17 +49,21 @@ export default function HomePage() {
               Compare the five countries
             </Button>
           </div>
-          <div className="mt-12 grid gap-3 sm:grid-cols-5">
-            {countries.map((c) => (
-              <Link
-                key={c.code}
-                href={`/countries/${c.code}`}
-                className="group rounded-xl border border-navy-900/10 bg-white p-4 transition hover:-translate-y-0.5 hover:border-navy-900/30 hover:shadow-md"
-              >
-                <div className="text-2xl">{c.flag}</div>
-                <div className="mt-2 font-semibold">{c.name}</div>
-                <div className="mt-1 text-xs text-navy-800/70">{c.localName.split(" / ")[0]}</div>
-              </Link>
+          <div className="mt-12 grid gap-6 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
+            {regions.map((region) => (
+              <div key={region} className="rounded-2xl border border-navy-900/10 bg-white p-4">
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-navy-800/60">{region}</h2>
+                <ul className="mt-3 space-y-1.5">
+                  {countriesByRegion(region).map((c) => (
+                    <li key={c.code}>
+                      <Link href={`/countries/${c.code}`} className="flex items-center gap-2 text-sm font-medium hover:text-navy-700 hover:underline">
+                        <span>{c.flag}</span>
+                        <span>{c.name}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
         </Container>
@@ -68,10 +72,11 @@ export default function HomePage() {
       <Section>
         <Container>
           <Eyebrow>Why Emismart</Eyebrow>
-          <H2>Five countries, five procedures, one experience.</H2>
+          <H2>Twenty-seven countries, twenty-seven procedures, one experience.</H2>
           <Lead>
-            Each country implements the EU Single Permit Directive its own way. Emismart absorbs that complexity so that
-            the people involved only see the steps that concern them.
+            Twenty-five member states implement the EU Single Permit Directive, each in its own way. Denmark and Ireland
+            run national schemes outside it. Emismart absorbs that complexity so that the people involved only see the
+            steps that concern them.
           </Lead>
           <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {pillars.map((p) => (
@@ -91,8 +96,8 @@ export default function HomePage() {
               <Eyebrow>At a glance</Eyebrow>
               <H2>Who files, who decides, how long it takes.</H2>
               <Lead>
-                The single permit is employer-led in Belgium and the Netherlands, two-stage in France, embedded in the
-                residence title in Germany and Luxembourg. The table shows the official standard decision periods.
+                The permit is employer-led in some countries, two-stage in others, and embedded in the residence title
+                elsewhere. The table shows who files and the official standard decision period for every member state.
               </Lead>
               <div className="mt-6">
                 <Button href="/how-it-works" variant="secondary">
@@ -100,9 +105,9 @@ export default function HomePage() {
                 </Button>
               </div>
             </div>
-            <div className="overflow-hidden rounded-2xl border border-navy-900/10 bg-white">
+            <div className="max-h-[560px] overflow-auto rounded-2xl border border-navy-900/10 bg-white">
               <table className="w-full text-left text-sm">
-                <thead className="bg-navy-50 text-xs uppercase tracking-wider text-navy-800/70">
+                <thead className="sticky top-0 bg-navy-50 text-xs uppercase tracking-wider text-navy-800/70">
                   <tr>
                     <th className="px-4 py-3">Country</th>
                     <th className="px-4 py-3">Files</th>
@@ -115,9 +120,7 @@ export default function HomePage() {
                       <td className="px-4 py-3 font-medium">
                         {c.flag} {c.name}
                       </td>
-                      <td className="px-4 py-3 text-navy-800/80">
-                        {c.code === "be" || c.code === "nl" ? "Employer" : c.code === "fr" ? "Employer, then employee" : "Employee, employer assists"}
-                      </td>
+                      <td className="px-4 py-3 text-navy-800/80">{c.whoApplies.split(".")[0]}.</td>
                       <td className="px-4 py-3 text-navy-800/80">{c.decisionPeriod.split(".")[0]}.</td>
                     </tr>
                   ))}

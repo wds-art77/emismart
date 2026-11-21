@@ -3,17 +3,17 @@ import { Button, Card, Container, Disclaimer, Eyebrow, H1, H2, Lead, Section } f
 
 export const metadata: Metadata = {
   title: "For employers",
-  description: "Emismart for HR teams and employers hiring non-EU talent in Belgium, the Netherlands, France, Germany and Luxembourg.",
+  description: "Emismart for HR teams and employers hiring non-EU talent anywhere in the European Union.",
 };
 
 const benefits = [
   {
-    title: "One process across five countries",
-    body: "Hire into Brussels, Amsterdam, Paris, Frankfurt or Luxembourg with the same workflow, adapted automatically to the local procedure.",
+    title: "One process across twenty-seven countries",
+    body: "Hire into Brussels, Amsterdam, Paris, Frankfurt, Warsaw, Madrid or Dublin with the same workflow, adapted automatically to the local procedure.",
   },
   {
     title: "Labour market test guidance",
-    body: "Know in advance whether the vacancy must be advertised with UWV, France Travail or ADEM, for how long, and what evidence to keep.",
+    body: "Know in advance whether the vacancy must be advertised with the national employment service, for how long, and what evidence to keep.",
   },
   {
     title: "Compliance record",
@@ -41,9 +41,9 @@ export default function EmployersPage() {
           <Eyebrow>For employers</Eyebrow>
           <H1>Hire international talent without becoming an immigration department.</H1>
           <Lead>
-            In Belgium, the Netherlands and Luxembourg the employer carries the procedure. In France the employer opens
-            it. In Germany the employer can accelerate it. Emismart gives HR teams a single, repeatable way to do all of
-            this well.
+            In most member states the employer carries or opens the procedure. In others the employer accelerates it or
+            supplies the documents the worker files. Emismart gives HR teams a single, repeatable way to do all of this
+            well, in every EU country.
           </Lead>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button href="/start">Open an employer case file</Button>

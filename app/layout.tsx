@@ -9,11 +9,11 @@ export const metadata: Metadata = {
     template: "%s | Emismart",
   },
   description:
-    "Emismart simplifies, streamlines and digitalises work migration to Europe, starting with single permit applications in Belgium, the Netherlands, France, Germany and Luxembourg.",
+    "Emismart simplifies, streamlines and digitalises work migration to Europe: single permit and national work permit applications in all 27 EU member states.",
   keywords: ["single permit", "permis unique", "GVVA", "work visa Europe", "EU Blue Card", "immigration Belgium", "immigration Netherlands"],
   openGraph: {
     title: "Emismart",
-    description: "Digital single permit applications for Belgium, the Netherlands, France, Germany and Luxembourg.",
+    description: "Digital work and residence permit applications for all 27 EU member states.",
     type: "website",
   },
 };
