@@ -15,9 +15,10 @@ export default function StartPage() {
         <Eyebrow>Case file</Eyebrow>
         <H1>Open your case file.</H1>
         <Lead>
-          A case file brings the employer, the employee and, if needed, counsel around one dossier. This preview stores
-          the file locally in your browser only; nothing is transmitted. The production version adds secure accounts,
-          document upload and status tracking.
+          A case file brings the employer, the employee and, if needed, counsel around one dossier: milestones with
+          dates, the statutory decision deadline, and document progress. This preview stores the file in your browser
+          only and lets you exchange it as a file; nothing is transmitted. The production version adds secure accounts
+          and document upload.
         </Lead>
         <div className="mt-10">
           <Suspense fallback={null}>

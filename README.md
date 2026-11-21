@@ -26,7 +26,9 @@ Points that could not be confirmed on an official page are flagged in the text i
 - Eligibility check (`/eligibility`): eight-question questionnaire with a rules engine (`lib/eligibility.ts`) that
   points to the single permit, a highly qualified route, the German Opportunity Card or a job-offer-first message.
 - Document checklist (`/checklist`): per country and per party, with progress saved in the browser and print to PDF.
-- Case file intake (`/start`): multi-step form producing a case reference and summary, stored locally in the browser.
+- Case tracker (`/start`): intake, then milestones per country step with status, dates and notes, an indicative
+  statutory decision deadline computed from the filing date (`lib/deadlines.ts`), document progress linked to the
+  checklists, and JSON export/import so employer and employee can exchange the file. Stored locally in the browser.
 - Summary of the recast Single Permit Directive (EU) 2024/1233 on the home page.
 - Sitemap and robots routes, print styles, responsive layout.
 
@@ -55,7 +57,7 @@ npm run build && npm start
 
 1. Accounts and roles: employer, employee, lawyer or mandatary, with invitation into a shared case file.
 2. Secure document vault hosted in the EU, with legalisation and translation status per document and e-signature.
-3. Status tracking with statutory deadlines (admissibility, 90-day decision period, visa, card collection) and reminders.
+3. Server-side status tracking with e-mail reminders, building on the local tracker and deadline data.
 4. Payments for Emismart services; government fees displayed separately and never marked up.
 5. Lawyer review queue for flagged cases, refusals and appeals.
 6. Multilingual interface: English, French, Dutch and German.
