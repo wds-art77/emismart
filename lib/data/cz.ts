@@ -66,7 +66,7 @@ export const cz: Country =
         title: "Biometrics, bridging certificate and card collection",
         actor: "Employee",
         detail:
-          "Within 3 working days of arrival (30 days if entering on the visa) the worker registers at a Ministry office, gives biometric data and receives a Certificate of Compliance with the conditions, which allows work to start. The card is collected within 60 days, with the employer's confirmation that work has begun.",
+          "Within 30 days of arrival on the D/VR visa (3 working days if entering visa-free with a biometric passport) the worker registers at a Ministry office, gives biometric data and receives a Certificate of Compliance with the conditions, which allows work to start. The card is collected within 60 days, with the employer's confirmation that work has begun.",
       },
     ],
     employerDocs: [
@@ -87,10 +87,10 @@ export const cz: Country =
       { label: "Medical travel insurance before the D/VR visa is issued" },
     ],
     alternativeRoutes: [
-      { name: "EU Blue Card", summary: "For highly qualified workers with a higher-education degree and a salary above the threshold published yearly, for vacancies in the separate Blue Card register. Issued for up to 3 years." },
+      { name: "EU Blue Card", summary: "For highly qualified workers with a higher-education degree and a salary above the threshold published yearly, for vacancies in the separate Blue Card register." },
       { name: "Intra-company transferee card", summary: "For managers, specialists and trainees transferred within a group, outside the Employee Card register." },
-      { name: "Government-approved economic migration programmes", summary: "The Key and Research Staff, Highly Qualified Employee and Qualified Employee programmes give guaranteed embassy appointments and allow the employer to file by power of attorney." },
-      { name: "Non-dual Employee Card", summary: "Residence only, for workers with free access to the labour market or a separate Labour Office work permit, such as students completing a Czech degree." },
+      { name: "Government-approved economic migration programmes", summary: "Programmes such as Key and Research Staff and Highly Qualified Employee give access to embassy appointments, allow the employer to file by power of attorney and let employer confirmations replace some documents." },
+      { name: "Non-dual Employee Card", summary: "Residence only, for workers who have free access to the labour market or hold a separate Labour Office work permit." },
     ],
     watchOuts: [
       "Embassy appointments are the bottleneck. Several embassies run quotas or registration systems and dates are cancelled or moved; the application cannot be filed by post or online and a wrong embassy means rejection.",

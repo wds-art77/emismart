@@ -27,7 +27,7 @@ export const pl: Country =
       "Directive 2011/98/EU, recast by Directive (EU) 2024/1233",
     ],
     decisionPeriod:
-      "The EU Immigration Portal states that the procedure should end within 60 days of a complete application. The period runs only once the application is formally complete, the fee is paid and fingerprints have been taken at the voivodeship office. Voivodeship offices process cases in order of receipt and the statutory period is frequently exceeded in practice; confirm the current position with the competent office.",
+      "The EU Immigration Portal states that the procedure should end within 60 days of a complete application. The period runs only once the application is formally complete, the fee is paid and any missing documents have been supplied by the deadline set by the Voivode. Voivodeship offices process cases in order of receipt; confirm the current position with the competent office.",
     validity:
       "Granted for the period needed for the purpose of stay, longer than 3 months and up to 3 years, with the possibility of further permits. The residence card is marked with access to the labour market. The permit is tied to the employer and the main conditions of work stated in it.",
     labourMarketTest:
@@ -61,7 +61,7 @@ export const pl: Country =
         title: "Fingerprints and verification at the voivodeship office",
         actor: "Authority",
         detail:
-          "The voivodeship office checks the application, summons the worker to give fingerprints and a signature sample, and requests missing documents by a set deadline. A stamp is placed in the passport confirming legal stay during the proceedings.",
+          "The voivodeship office checks the application, summons the worker to give fingerprints and a signature sample, and requests missing documents by a set deadline. A missing document is a formal defect and the application is left unexamined if it is not supplied in time.",
       },
       {
         title: "Decision and residence card",
@@ -89,7 +89,7 @@ export const pl: Country =
     ],
     alternativeRoutes: [
       { name: "EU Blue Card", summary: "Temporary residence permit for work in a profession requiring high qualifications, with a higher-education degree or qualifying experience and a salary above a threshold set yearly. Also filed through MOS." },
-      { name: "Work permit and national visa", summary: "The employer obtains a work permit (type A) from the Voivode through praca.gov.pl and the worker enters on a national visa. Used before the single permit or instead of it for shorter stays." },
+      { name: "Work permit and national visa", summary: "The employer obtains a work permit from the Voivode through praca.gov.pl and the worker enters on a national visa. Used before the single permit or instead of it for shorter stays." },
       { name: "Declaration of entrusting work", summary: "For nationals of Ukraine, Belarus, Russia, Georgia, Moldova and Armenia, registered with the district labour office and valid for up to 24 months, without a work permit." },
       { name: "Intra-corporate transfer permit", summary: "Separate temporary residence permit for managers, specialists and trainees transferred within a group, still filed on paper." },
     ],

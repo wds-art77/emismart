@@ -30,7 +30,7 @@ export const sk: Country =
     decisionPeriod:
       "Under § 33(8) of the Act on the Residence of Foreigners the Foreign Police decides within 90 days as a general rule, within 60 days of a complete application for the single permit based on a vacancy confirmation, and within 30 days where the job is a shortage occupation in the region and the employer meets the conditions of the Employment Services Act. The Labour Office must return its vacancy confirmation to the police within 5 working days of the request.",
     validity:
-      "Granted for the expected duration of employment, up to a maximum of 2 years in the usual case, and renewable repeatedly. The Act allows up to 5 years for temporary residence for employment, and the EU Immigration Portal notes this longer period applies where a treaty or reciprocity provides for it. The worker must enter Slovakia within 180 days of the grant.",
+      "Granted for the expected duration of employment and renewable repeatedly. The consolidated text of § 23(3) of the Act allows a grant of up to 5 years, while the EU Immigration Portal still describes a 2-year maximum per grant with 5 years only where a treaty or reciprocity applies; confirm the period the Foreign Police currently applies. The worker must enter Slovakia within 180 days of the grant.",
     labourMarketTest:
       "Yes. The employer reports the vacancy to the Labour Office at least 20 working days before the residence application. If no registered jobseeker fills the post in that time, the Labour Office confirms that the vacancy may be filled by a third-country national. For shortage occupations published quarterly by the Central Office of Labour, the confirmation is issued without a labour market test provided the employer's share of third-country nationals stays below the statutory limit. Some categories need neither a confirmation nor a work permit.",
     steps: [
@@ -38,7 +38,7 @@ export const sk: Country =
         title: "Report the vacancy to the Labour Office",
         actor: "Employer",
         detail:
-          "The employer reports the vacancy to the Labour Office (electronically through slovensko.sk) at least 20 working days before the worker's application. For shortage occupations the report can be made without the waiting period.",
+          "The employer reports the vacancy to the Labour Office, using its electronic forms, at least 20 working days before the worker's application. For shortage occupations the report can be made without the waiting period.",
       },
       {
         title: "Sign the contract or written promise of employment",
