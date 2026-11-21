@@ -4,10 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { countries, type CountryCode } from "@/lib/countries";
 import { Pill } from "@/components/ui";
+import { useT } from "@/components/locale";
+import { fmt } from "@/lib/i18n";
 
 type Party = "employer" | "employee";
 
 export function Checklist() {
+  const d = useT();
+  const partyLabel = (p: Party) => (p === "employer" ? d.common.employer : d.common.employee);
   const params = useSearchParams();
   const preset = params.get("country") as CountryCode | null;
   const [code, setCode] = useState<CountryCode>(preset && countries.some((c) => c.code === preset) ? preset : "be");
@@ -43,9 +47,9 @@ export function Checklist() {
     <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
       <aside className="no-print space-y-6">
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-navy-800/60">Country</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-navy-800/60">{d.checklist.country}</h2>
           <select
-            aria-label="Country"
+            aria-label={d.checklist.country}
             value={code}
             onChange={(e) => setCode(e.target.value as CountryCode)}
             className="mt-3 w-full rounded-xl border border-navy-900/20 bg-white px-4 py-3 text-sm font-medium focus:border-navy-900 focus:outline-none"
@@ -58,17 +62,17 @@ export function Checklist() {
           </select>
         </div>
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-navy-800/60">Party</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-navy-800/60">{d.checklist.party}</h2>
           <div className="mt-3 grid grid-cols-2 gap-2">
             {(["employee", "employer"] as Party[]).map((p) => (
               <button
                 key={p}
                 onClick={() => setParty(p)}
-                className={`rounded-xl border px-4 py-3 text-sm font-medium capitalize transition ${
+                className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${
                   p === party ? "border-navy-900 bg-navy-900 text-white" : "border-navy-900/15 hover:border-navy-900/40"
                 }`}
               >
-                {p}
+                {partyLabel(p)}
               </button>
             ))}
           </div>
@@ -77,7 +81,7 @@ export function Checklist() {
           onClick={() => window.print()}
           className="w-full rounded-full border border-navy-900/20 px-5 py-3 text-sm font-semibold text-navy-900 hover:border-navy-900/50"
         >
-          Print or save as PDF
+          {d.common.print}
         </button>
       </aside>
 
@@ -87,10 +91,10 @@ export function Checklist() {
             <p className="text-sm text-navy-800/70">
               {country.flag} {country.name} · {country.permitName}
             </p>
-            <h2 className="mt-1 text-2xl font-semibold capitalize">{party} documents</h2>
+            <h2 className="mt-1 text-2xl font-semibold">{fmt(d.checklist.documents, { party: partyLabel(party) })}</h2>
           </div>
           <Pill tone={doneCount === docs.length ? "green" : "navy"}>
-            {doneCount} of {docs.length} collected
+            {fmt(d.checklist.collected, { n: doneCount, total: docs.length })}
           </Pill>
         </div>
         <ul className="mt-6 divide-y divide-navy-900/10">
@@ -111,9 +115,7 @@ export function Checklist() {
           ))}
         </ul>
         <div className="mt-6 rounded-xl bg-sand-50 p-4 text-sm leading-relaxed text-navy-800/85">
-          <strong>Legalisation and translation.</strong> Civil status documents, criminal record extracts and diplomas
-          issued outside the EU generally need an apostille or legalisation and a sworn translation into one of the
-          procedural languages ({country.languages.join(", ")}). Start these first; they take the longest.
+          <strong>{d.checklist.legalisationTitle}</strong> {fmt(d.checklist.legalisationBody, { languages: country.languages.join(", ") })}
         </div>
       </div>
     </div>

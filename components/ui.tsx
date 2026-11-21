@@ -76,14 +76,3 @@ export function Pill({ children, tone = "navy" }: { children: ReactNode; tone?: 
   };
   return <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${tones[tone]}`}>{children}</span>;
 }
-
-export function Disclaimer() {
-  return (
-    <p className="mt-10 rounded-xl border border-gold-500/40 bg-gold-100/50 p-4 text-sm leading-relaxed text-navy-900">
-      <strong>Indicative information.</strong> Emismart summarises publicly available official guidance to help you
-      prepare. It is not legal advice and does not replace the official pages of the competent authorities, which remain
-      the only authoritative source for current rules, fees and salary thresholds. Where a case needs legal advice, Emismart
-      connects you with a qualified immigration lawyer.
-    </p>
-  );
-}

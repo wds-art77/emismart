@@ -4,14 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Container } from "./ui";
-
-const links = [
-  { href: "/countries", label: "Countries" },
-  { href: "/how-it-works", label: "How it works" },
-  { href: "/employers", label: "Employers" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/about", label: "About" },
-];
+import { LanguageSwitcher, useT } from "./locale";
 
 export function Logo({ dark = false }: { dark?: boolean }) {
   return (
@@ -33,11 +26,19 @@ export function Logo({ dark = false }: { dark?: boolean }) {
 export function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const d = useT();
+  const links = [
+    { href: "/countries", label: d.nav.countries },
+    { href: "/how-it-works", label: d.nav.howItWorks },
+    { href: "/employers", label: d.nav.employers },
+    { href: "/pricing", label: d.nav.pricing },
+    { href: "/about", label: d.nav.about },
+  ];
   return (
     <nav className="sticky top-0 z-40 border-b border-navy-900/10 bg-white/90 backdrop-blur">
       <Container className="flex h-16 items-center justify-between">
         <Logo />
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -49,23 +50,22 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
+          <LanguageSwitcher />
           <Link
             href="/eligibility"
             className="rounded-full bg-navy-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-navy-800"
           >
-            Check eligibility
+            {d.nav.checkEligibility}
           </Link>
         </div>
-        <button
-          className="md:hidden rounded-md p-2 text-navy-900"
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          onClick={() => setOpen(!open)}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-          </svg>
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <LanguageSwitcher />
+          <button className="rounded-md p-2 text-navy-900" aria-label={d.nav.menu} aria-expanded={open} onClick={() => setOpen(!open)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+            </svg>
+          </button>
+        </div>
       </Container>
       {open && (
         <div className="border-t border-navy-900/10 bg-white md:hidden">
@@ -76,7 +76,7 @@ export function Nav() {
               </Link>
             ))}
             <Link href="/eligibility" onClick={() => setOpen(false)} className="mt-2 rounded-full bg-navy-900 px-5 py-2 text-center text-sm font-semibold text-white">
-              Check eligibility
+              {d.nav.checkEligibility}
             </Link>
           </Container>
         </div>

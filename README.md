@@ -30,6 +30,9 @@ Points that could not be confirmed on an official page are flagged in the text i
   statutory decision deadline computed from the filing date (`lib/deadlines.ts`), document progress linked to the
   checklists, and JSON export/import so employer and employee can exchange the file. Stored locally in the browser.
 - Summary of the recast Single Permit Directive (EU) 2024/1233 on the home page.
+- Interface in English, French, Dutch and German (`lib/i18n/*.ts`), with a switcher in the navigation. The English
+  dictionary defines the type, so the compiler guarantees the other three are complete. The choice is remembered in the
+  browser. Country guide content stays in English pending legal review; a note says so in the other languages.
 - Sitemap and robots routes, print styles, responsive layout.
 
 All legal content is indicative, summarises publicly available official guidance and links to its sources. It is not
@@ -60,7 +63,7 @@ npm run build && npm start
 3. Server-side status tracking with e-mail reminders, building on the local tracker and deadline data.
 4. Payments for Emismart services; government fees displayed separately and never marked up.
 5. Lawyer review queue for flagged cases, refusals and appeals.
-6. Multilingual interface: English, French, Dutch and German.
+6. Locale-prefixed routes (/fr, /nl, /de) for indexable translated pages, then translation of the country guides.
 7. Content operations: a review calendar tied to official publications (regional shortage lists, IND fees, French
    arrêtés, German BeschV changes, Luxembourg legislation).
 8. Extension to further routes (EU Blue Card, ICT, family reunification, renewals) and to EEA states and Switzerland.

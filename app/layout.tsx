@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { LocaleProvider } from "@/components/locale";
 
 export const metadata: Metadata = {
   title: {
@@ -22,9 +23,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col">
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <LocaleProvider>
+          <Nav />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </LocaleProvider>
       </body>
     </html>
   );
