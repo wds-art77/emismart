@@ -13,6 +13,7 @@ export const cy: Country =
     tagline: "Department of Labour approval and a stamped contract first, then an entry permit and residence and employment permit from the Civil Registry and Migration Department.",
     overview:
       "Cyprus runs a two-stage system. The Department of Labour of the Ministry of Labour and Social Insurance checks, through its District Labour Offices, that no Cypriot or EU worker is available and that the job falls within the sectors and criteria approved by the Council of Ministers. Once the Department stamps the employment contract, the employer applies to the Civil Registry and Migration Department (CRMD) of the Ministry of Interior for an entry permit. After arrival the worker is registered and receives a temporary residence and employment permit, which is the single permit for the purposes of the directive.",
+    whoFilesShort: "Employer",
     whoApplies:
       "The employer starts the process by posting the vacancy with the District Labour Office and then applies for the Department of Labour approval. The employer also lodges the entry and residence permit application with the CRMD or through the District Aliens and Immigration Units of the Police. The worker completes the registration and biometrics in Cyprus after arrival.",
     authorities: [

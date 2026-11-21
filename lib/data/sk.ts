@@ -13,6 +13,7 @@ export const sk: Country =
     tagline: "Vacancy reported to the Labour Office first, then one residence application to the Foreign Police which obtains the vacancy confirmation itself.",
     overview:
       "Slovakia's single permit is temporary residence for the purpose of employment granted by the Foreign Police on the basis of a confirmation from the Labour Office that the vacancy may be filled by a third-country national. The employer reports the vacancy to the Labour Office in advance; the worker files one application for residence, normally at the Slovak embassy abroad, and the Foreign Police requests the vacancy confirmation from the Labour Office through the information system. A separate work permit issued by the Labour Office is used only in specific cases, such as family members in their first year. The permit is tied to the employer, position and place of work.",
+    whoFilesShort: "Worker, employer reports vacancy",
     whoApplies:
       "The worker applies in person at the Slovak embassy in the country of nationality or residence, or at the competent Foreign Police department in Slovakia if already staying there legally. The employer does not file the residence application but must report the vacancy to the Labour Office at least 20 working days beforehand and supply the contract or written promise of employment.",
     authorities: [

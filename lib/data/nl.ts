@@ -13,6 +13,7 @@ export const nl: Country =
     tagline: "Residence and work in one decision from the IND, with UWV advising on the labour market.",
     overview:
       "The GVVA is the Dutch single permit for non-EU workers who will stay and work for more than 3 months and who do not fall under a separate scheme such as the highly skilled migrant route. The Immigration and Naturalisation Service (IND) decides and always asks the UWV to advise on the labour market aspects. The permit comes with an additional document stating the employer and working conditions.",
+    whoFilesShort: "Employer",
     whoApplies:
       "Normally the employer applies to the IND. The worker may also apply. Recognised sponsors use the faster TEV procedure for the entry visa and residence permit together.",
     authorities: [

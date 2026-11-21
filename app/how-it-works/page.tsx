@@ -80,7 +80,7 @@ export default function HowItWorksPage() {
                     </td>
                     <td className="px-4 py-3 text-navy-800/85">{c.localName}</td>
                     <td className="px-4 py-3 text-navy-800/85">{c.singlePermitDirective ? "Single permit" : "National scheme"}</td>
-                    <td className="px-4 py-3 text-navy-800/85">{c.whoApplies.split(".")[0]}.</td>
+                    <td className="px-4 py-3 text-navy-800/85">{c.whoFilesShort}</td>
                     <td className="px-4 py-3 text-navy-800/85">{c.labourMarketTest.split(":")[0].split(".")[0]}.</td>
                     <td className="px-4 py-3 text-navy-800/85">{c.decisionPeriod.split(".")[0]}.</td>
                   </tr>

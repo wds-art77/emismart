@@ -39,6 +39,8 @@ export type Country = {
   tagline: string;
   overview: string;
   whoApplies: string;
+  /** short label for tables, e.g. "Employer" */
+  whoFilesShort: string;
   authorities: string[];
   legalBasis: string[];
   decisionPeriod: string;

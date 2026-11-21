@@ -39,7 +39,7 @@ export default function CountriesPage() {
               <dl className="mt-5 grid grid-cols-2 gap-3 text-xs">
                 <div>
                   <dt className="font-semibold uppercase tracking-wider text-navy-800/60">Who files</dt>
-                  <dd className="mt-1 text-navy-900">{c.whoApplies.split(".")[0]}.</dd>
+                  <dd className="mt-1 text-navy-900">{c.whoFilesShort}</dd>
                 </div>
                 <div>
                   <dt className="font-semibold uppercase tracking-wider text-navy-800/60">Decision period</dt>

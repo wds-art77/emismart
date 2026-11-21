@@ -13,6 +13,7 @@ export const be: Country =
     tagline: "One application, one card: work and residence for stays over 90 days.",
     overview:
       "Since 1 January 2019 Belgium issues a single permit covering both the authorisation to work and the right to reside for employment of more than 90 days. The procedure is shared between the Region (work) and the federal Immigration Office (residence). The employer files; the worker receives a single electronic residence card once both sides approve.",
+    whoFilesShort: "Employer",
     whoApplies:
       "The Belgian employer, or a mandated representative such as a law firm, files on behalf of the worker with the competent Region. The worker cannot file alone.",
     authorities: [

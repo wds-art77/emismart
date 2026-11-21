@@ -13,6 +13,7 @@ export const mt: Country =
     tagline: "Employer-led online application to Identità, with Jobsplus assessing the labour market before the permit is approved.",
     overview:
       "Malta issues one card combining residence and work for non-EU nationals employed for more than 6 months. The employer applies online through the Single Permit portal run by Identità (formerly Identity Malta). Identità refers each application to Jobsplus, the national employment agency, for a labour market assessment, and to the police for security clearance. Shorter engagements of under 6 months use a separate Jobsplus employment licence followed by a residence permit. Highly paid or specialised workers can use the faster Key Employee Initiative or Specialist Employee Initiative, which still result in a single permit.",
+    whoFilesShort: "Employer",
     whoApplies:
       "Only the employer, as the Maltese organisation offering the job, can submit a single permit application; the worker confirms the data through a link and attends biometrics. The worker must either still be abroad or already hold legal status in Malta through a valid residence permit or visa. The employer must be registered with Jobsplus and vetted by Identità before it can access the portal. Live-in carers are the one category allowed to apply directly, with the employer's endorsement.",
     authorities: [

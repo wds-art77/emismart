@@ -46,7 +46,7 @@ export default function HomePage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Button href="/eligibility">Check your eligibility</Button>
             <Button href="/countries" variant="secondary">
-              Compare the five countries
+              Compare all 27 countries
             </Button>
           </div>
           <div className="mt-12 grid gap-6 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
@@ -120,7 +120,7 @@ export default function HomePage() {
                       <td className="px-4 py-3 font-medium">
                         {c.flag} {c.name}
                       </td>
-                      <td className="px-4 py-3 text-navy-800/80">{c.whoApplies.split(".")[0]}.</td>
+                      <td className="px-4 py-3 text-navy-800/80">{c.whoFilesShort}</td>
                       <td className="px-4 py-3 text-navy-800/80">{c.decisionPeriod.split(".")[0]}.</td>
                     </tr>
                   ))}

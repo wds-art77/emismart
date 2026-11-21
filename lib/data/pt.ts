@@ -13,6 +13,7 @@ export const pt: Country =
     tagline: "A residence visa from the consulate on the strength of a Portuguese job offer, then a residence permit from AIMA after arrival.",
     overview:
       "Portugal runs a two-stage process. The worker first obtains a residence visa for employed work (visto de residência para exercício de atividade profissional subordinada) at the Portuguese consulate, based on an employment contract, a promise of contract or an individualised expression of interest from an employer. After entering Portugal the worker applies to AIMA, the Agency for Integration, Migration and Asylum, for the residence permit under article 88 of the Lei de Estrangeiros. The former route of applying inside Portugal through a manifestation of interest (manifestação de interesse) was abolished in 2024 and the corresponding paragraph of article 88 is now revoked, so the visa must be obtained before arrival.",
+    whoFilesShort: "Worker, employer provides contract",
     whoApplies:
       "The worker applies for the visa in person at the Portuguese consulate of the country of residence, often through an outsourced visa centre, with the employer's contract or promise of contract attached. After arrival the worker applies to AIMA for the residence permit. The employer does not file with the authorities but must provide the contract, register the worker with Social Security and, where relevant, support the file.",
     authorities: [

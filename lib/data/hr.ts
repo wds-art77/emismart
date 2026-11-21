@@ -13,6 +13,7 @@ export const hr: Country =
     tagline: "Labour market test and opinion from the Croatian Employment Service, then a single permit decided by the police administration of the Ministry of the Interior.",
     overview:
       "The dozvola za boravak i rad is Croatia's single permit allowing a non-EU national to stay and work for a named employer in a named occupation. The Ministry of the Interior decides through its police administrations and police stations. For most jobs the employer must first ask the Croatian Employment Service (HZZ) to run a labour market test and then apply through the HZZ online platform, which forwards its opinion to the police. Occupations on the HZZ shortage list skip the test but still need the HZZ opinion, and categories listed in Article 110 of the Aliens Act, such as EU Blue Card holders, key personnel and intra-corporate transferees, need neither.",
+    whoFilesShort: "Employer, via HZZ platform",
     whoApplies:
       "For permits that require a labour market test or an HZZ opinion, the employer applies through the HZZ web platform. For permits that need neither, the worker or the employer applies at the competent police administration or station, in person or by e-mail with the prescribed form. Workers who need a visa apply at a Croatian diplomatic mission; visa-exempt nationals may apply at the police in Croatia. Extensions are filed by the worker or employer at the police station for the worker's place of residence.",
     authorities: [

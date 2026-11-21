@@ -13,6 +13,7 @@ export const cz: Country =
     tagline: "A long-term residence permit for one registered vacancy, applied for in person at a Czech embassy and decided by the Ministry of the Interior.",
     overview:
       "The Employee Card is Czechia's single permit: a long-term residence permit for stays over 3 months that also authorises work in the specific job it was issued for. In the usual dual form the job must be listed in the Central Register of Job Vacancies that can be filled by Employee Card holders, kept by the Ministry of Labour and Social Affairs through the Labour Office. A non-dual card is a residence document only, for workers who have free access to the labour market or hold a separate work permit. The Ministry of the Interior decides; the worker applies in person at a Czech embassy abroad, or at a Ministry office in Czechia when already holding a long-term visa or permit.",
+    whoFilesShort: "Worker, after employer registers vacancy",
     whoApplies:
       "The worker applies in person at the Czech embassy in the country of nationality or long-term residence, or inside Czechia at a Ministry of the Interior office if already holding a long-term visa or residence permit. Under government-approved programmes the employer may file on the worker's behalf by power of attorney. The employer's role is to register the vacancy with the Labour Office, consent to its inclusion in the central register and provide the vacancy number and the contract.",
     authorities: [

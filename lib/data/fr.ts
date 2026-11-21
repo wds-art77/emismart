@@ -13,6 +13,7 @@ export const fr: Country =
     tagline: "Employer-led online work authorisation, then a long-stay visa that becomes the residence permit.",
     overview:
       "France implements the single permit through a two-stage but linked procedure. The employer requests the work authorisation online on the ANEF platform of the Ministry of the Interior. Once granted, the worker applies for a long-stay visa equivalent to a residence permit (VLS-TS) marked salarié or travailleur temporaire, which is validated online after arrival and serves as the residence and work title.",
+    whoFilesShort: "Employer, then worker",
     whoApplies:
       "The employer files the work authorisation request online. The worker then files the visa application through France-Visas and validates the VLS-TS after arrival.",
     authorities: [

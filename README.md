@@ -1,20 +1,26 @@
 # Emismart
 
-Emismart simplifies, streamlines and digitalises work migration to Europe. The first release covers single permit
-applications in five countries:
+Emismart simplifies, streamlines and digitalises work migration to Europe. It covers work and residence permit
+procedures in all 27 EU member states: the single permit in the 25 states bound by Directive 2011/98/EU and its
+2024 recast, and the national schemes of Denmark and Ireland, which are not bound by it.
 
-| Country | Permit | Who files |
-| --- | --- | --- |
-| Belgium | Single permit (permis unique / gecombineerde vergunning) | Employer, with the competent Region |
-| Netherlands | GVVA (gecombineerde vergunning voor verblijf en arbeid) | Employer, with the IND |
-| France | Work authorisation (ANEF) then VLS-TS salarié or travailleur temporaire | Employer, then employee |
-| Germany | Aufenthaltserlaubnis zur Beschäftigung (§§ 18a, 18b AufenthG), fast-track procedure | Employee, employer assists |
-| Luxembourg | Autorisation de séjour travailleur salarié | Employee, after the employer's ADEM declaration |
+Launch depth is deepest for Belgium, the Netherlands, France, Germany and Luxembourg.
+
+| Region | Countries |
+| --- | --- |
+| Western Europe | Austria, Belgium, France, Germany, Ireland, Luxembourg, Netherlands |
+| Nordics | Denmark, Finland, Sweden |
+| Southern Europe | Cyprus, Greece, Italy, Malta, Portugal, Spain |
+| Central and Eastern Europe | Bulgaria, Croatia, Czechia, Hungary, Poland, Romania, Slovakia, Slovenia |
+| Baltics | Estonia, Latvia, Lithuania |
+
+Each country lives in its own file under `lib/data/<code>.ts` and carries the official sources it was drawn from.
+Points that could not be confirmed on an official page are flagged in the text itself ("confirm on the official page").
 
 ## What is in this version
 
 - Landing page, employer page, pricing structure, about and legal pages.
-- Country guides generated from a single data layer (`lib/countries.ts`): who applies, authorities, legal basis,
+- Country guides for all 27 member states generated from a single data layer (`lib/countries.ts`, `lib/data/*.ts`): who applies, authorities, legal basis,
   decision period, validity, labour market test, step-by-step procedure, employer and employee documents, alternative
   routes, watch-outs and official sources.
 - Eligibility check (`/eligibility`): eight-question questionnaire with a rules engine (`lib/eligibility.ts`) that
@@ -55,4 +61,17 @@ npm run build && npm start
 6. Multilingual interface: English, French, Dutch and German.
 7. Content operations: a review calendar tied to official publications (regional shortage lists, IND fees, French
    arrêtés, German BeschV changes, Luxembourg legislation).
-8. Extension to further routes (EU Blue Card, ICT, family reunification, renewals) and further countries.
+8. Extension to further routes (EU Blue Card, ICT, family reunification, renewals) and to EEA states and Switzerland.
+9. Legal review pass on the 22 countries added after the initial five, with particular attention to the items flagged
+   as unconfirmed in each file (see "Known gaps" below).
+
+## Known gaps flagged during research
+
+- Several official sites could not be opened from the research environment (Migri in Finland, the Lithuanian Migration
+  Department, the Cyprus CRMD, AIMA in Portugal, Hungarian OIF factsheets, Polish MOS). Those entries lean on the EU
+  Immigration Portal, national legislation and employment agency pages, and say so in the text.
+- Validity periods differ between the EU Immigration Portal and current national law for Croatia, Slovakia and
+  Slovenia; both figures are given with a note to confirm.
+- Romania (OUG 32/2026), Lithuania (2025 quota system) and Hungary (Act XC of 2023) changed their procedures recently;
+  the EU Immigration Portal pages are older than the national rules and the files follow the national rules.
+- Bulgaria's transposition of the recast directive was still a bill at the time of writing.

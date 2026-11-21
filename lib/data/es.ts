@@ -13,6 +13,7 @@ export const es: Country =
     tagline: "The employer applies at the Oficina de Extranjería, the worker then collects a visa and registers with Social Security within 3 months of entry.",
     overview:
       "Spain combines residence and work in one initial authorisation for employed work. The employer requests it from the Oficina de Extranjería of the province where the workplace is located, before the worker travels to Spain. Once granted, the worker applies for a residence and work visa at the Spanish consulate, enters Spain, and the authorisation takes effect when the employer registers the worker with Social Security. A new Reglamento de Extranjería (Real Decreto 1155/2024) applies since 20 May 2025 and sets the current rules.",
+    whoFilesShort: "Employer, then worker",
     whoApplies:
       "The employer, personally or through a representative, files the application at the Oficina de Extranjería. The worker is not in Spain at that stage. The worker then applies in person for the visa at the consulate of the country of residence and, after arrival, for the foreigner identity card (TIE).",
     authorities: [

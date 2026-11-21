@@ -13,6 +13,7 @@ export const se: Country =
     tagline: "The employer starts the application online and consults the union; the worker completes it and Migrationsverket decides on work and residence together.",
     overview:
       "A non-EU national who will work in Sweden for more than 3 months needs a work permit, which is granted together with a residence permit as one decision by the Swedish Migration Agency (Migrationsverket). There is no separate labour market test, but the vacancy must have been advertised in Sweden and the EU, the terms must match Swedish collective agreements or industry practice, the relevant trade union must have had the chance to comment, and the salary must reach a level set as a share of the Swedish median salary. The procedure is fully digital: the employer opens the case in the e-service, the worker finishes it from abroad and presents the passport at an embassy or through a digital check.",
+    whoFilesShort: "Employer starts, worker completes",
     whoApplies:
       "The employer initiates the application in Migrationsverket's e-service by entering the job details and sending them to the trade union for comment. The worker then receives a link, completes the personal part, attaches documents and pays the fee. First applications are normally made from outside Sweden; applying from inside Sweden is only possible for specific groups such as former students, certain visiting job applicants and holders changing employer.",
     authorities: [

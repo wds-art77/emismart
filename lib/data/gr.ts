@@ -13,6 +13,7 @@ export const gr: Country =
     tagline: "The employer's invitation (metaklisi) is approved by the Decentralised Administration, the worker enters on a national visa and applies online for the E.4 permit.",
     overview:
       "Greece applies the Migration Code, Law 5038/2023, in force since 2024. Hiring a non-EU worker from abroad for dependent employment starts with the employer's electronic application for approval of employment, known as metaklisi, to the Directorate of Aliens and Migration of the Decentralised Administration where the employer is based. Approval is only possible if the job falls within the maximum number of positions set by an act of the Council of Ministers per specialty and region. The approval is sent to the Greek consulate, which issues a national visa after the worker signs the contract. After arrival the worker applies online to the Ministry of Migration and Asylum for the type E.4 residence permit.",
+    whoFilesShort: "Employer, then worker",
     whoApplies:
       "The employer, a company or an individual, files the employment approval request through the electronic services of the Ministry of Migration and Asylum using TAXISnet credentials, or through an authorised lawyer. The worker then applies in person for the national visa at the consulate and, after entering Greece and before the visa expires, submits the residence permit application online.",
     authorities: [

@@ -13,6 +13,7 @@ export const ie: Country =
     tagline: "Two separate steps: an employment permit from the Department of Enterprise, then a visa where required and registration with Immigration Service Delivery.",
     overview:
       "Ireland does not take part in the Single Permit Directive, so work and residence are handled by two different bodies. The Department of Enterprise, Tourism and Employment (DETE) issues employment permits through its online portal; the General Employment Permit is the standard route for any occupation not on the Ineligible Occupations List, and the Critical Skills Employment Permit covers shortage occupations. The permit is not a residence permission: visa-required nationals then apply for a long-stay D visa, and everyone staying more than 90 days registers with Immigration Service Delivery (ISD) of the Department of Justice, Home Affairs and Migration to receive the Irish Residence Permit card.",
+    whoFilesShort: "Employer or worker",
     whoApplies:
       "Either the employer or the worker applies for the employment permit through Employment Permits Online; the permit is issued to the worker with a certified copy to the employer. The worker then applies for the D visa at the Irish embassy where required and registers in person with ISD after arrival.",
     authorities: [

@@ -13,6 +13,7 @@ export const si: Country =
     tagline: "One application to the administrative unit, which obtains the Employment Service's consent on its own initiative.",
     overview:
       "The enotno dovoljenje combines the residence permit formerly issued by administrative units and the work permit formerly issued by the Employment Service of Slovenia (ZRSZ). The administrative unit (upravna enota) runs the procedure and asks ZRSZ for its consent ex officio; ZRSZ checks the employer, the worker and the labour market. The permit is tied to a specific employer. A fast-track applies to occupations listed in a government decree, where work may start on the certificate of submission once ZRSZ consent is given.",
+    whoFilesShort: "Worker or employer",
     whoApplies:
       "The worker or the employer may apply. Companies and sole traders may file for the worker without a power of attorney, at any administrative unit or electronically through the SPOT portal; workers themselves cannot file electronically. A worker who is not lawfully in Slovenia applies at a Slovenian diplomatic mission or consular post, where fingerprints are also taken. A worker lawfully residing in Slovenia may apply at any administrative unit. The card is collected in person.",
     authorities: [

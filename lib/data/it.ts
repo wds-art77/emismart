@@ -13,6 +13,7 @@ export const it: Country =
     tagline: "Quota-based: the employer files for a nulla osta on a click day, the worker then gets a visa and a residence permit from the Questura.",
     overview:
       "Entry for employed work from abroad is only possible within yearly quotas set by a decree of the President of the Council of Ministers (Decreto Flussi). The current decree covers 2026 to 2028. The employer files a request for a nulla osta al lavoro with the Sportello Unico per l'Immigrazione of the Prefettura on dates fixed each year (click days). Once the nulla osta is issued the consulate grants an entry visa, the worker enters Italy, signs the residence contract (contratto di soggiorno) and applies to the Questura for the permesso di soggiorno. Certain categories, such as EU Blue Card holders, managers, researchers, nurses and artists, are outside the quotas and can be requested all year.",
+    whoFilesShort: "Employer in quota, then worker",
     whoApplies:
       "The employer, Italian or a foreign employer legally resident in Italy, files the nulla osta request online through the Ministry of the Interior's ALI portal, using SPID or CIE, often with the help of an employer association or a labour consultant. The worker applies for the visa at the Italian consulate and, after entry, for the residence permit.",
     authorities: [

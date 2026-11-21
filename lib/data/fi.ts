@@ -13,6 +13,7 @@ export const fi: Country =
     tagline: "One application in Enter Finland, assessed in full by the Finnish Immigration Service since the TE Office partial decision was abolished in 2025.",
     overview:
       "The residence permit for an employed person is the Finnish single permit for non-EU workers who are not covered by a job-specific permit such as the specialist permit, the EU Blue Card or the seasonal work permit. The worker applies online in the Enter Finland service and the employer attaches the terms of employment through Enter Finland for Employers. Since 1 January 2025 the Finnish Immigration Service (Migri) carries out the whole assessment, including the labour availability test that the Employment and Economic Development Offices (TE Offices) used to make as a separate partial decision. The permit is granted for one or more professional fields rather than for one employer.",
+    whoFilesShort: "Worker, employer attaches terms",
     whoApplies:
       "The worker applies, normally from abroad through Enter Finland, and then proves identity and gives fingerprints at a Finnish mission. The employer cannot apply on the worker's behalf but must enter the terms of employment in Enter Finland for Employers, or on the paper form TEM 0.54, before processing can start.",
     authorities: [
@@ -88,14 +89,14 @@ export const fi: Country =
       { label: "Proof of fee payment" },
     ],
     alternativeRoutes: [
-      { name: "Residence permit for a specialist", summary: "For higher-education graduates and IT specialists in expert roles. No availability assessment, first permit for two years, and a fast track with a two-week target where the employer is certified." },
+      { name: "Residence permit for a specialist", summary: "For higher-education graduates and IT specialists in expert roles. No availability assessment, first permit for two years, and a fast-track service with a two-week processing target." },
       { name: "EU Blue Card", summary: "Highly qualified workers with a higher-education degree and a salary above the Blue Card threshold; EU mobility advantages." },
       { name: "Seasonal work", summary: "Seasonal work visa for up to three months or a seasonal work residence permit for up to nine months; availability assessment applies to permits of six to nine months." },
       { name: "Permit for graduates and researchers to look for work", summary: "Holders of a Finnish degree or research permit may obtain a job-seeking permit of up to two years, applied for within five years of the previous permit." },
     ],
     watchOuts: [
       "The application is not processed until the worker has proven identity at a Finnish mission and the employer has attached the terms of employment; both steps are often delayed.",
-      "The permit is limited to the professional fields named in the decision. Work in another field requires a new application unless the worker has already worked nine months under the permit.",
+      "The permit is limited to the professional fields named in the decision. Work in another field requires a new permit application; the availability assessment is waived only if the worker has already worked at least nine months on the permit.",
       "Applications in fields with an oversupply of labour in the regional work permit policy are usually refused even with a job offer, and the employer must have met its tax and insurance obligations.",
     ],
     sources: [

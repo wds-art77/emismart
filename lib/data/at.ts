@@ -13,6 +13,7 @@ export const at: Country =
     tagline: "A points-based residence and work title for one employer, with the AMS checking the criteria and the residence authority deciding within 8 weeks.",
     overview:
       "The Red-White-Red Card is Austria's main route for non-EU workers taking up employment. It combines a fixed-term settlement right with permission to work for the employer named in the application. Admission is criteria based: the categories are very highly qualified workers, skilled workers in shortage occupations, other key workers, graduates of Austrian universities and regular seasonal workers, each with its own points table or salary requirement. The residence authority forwards every application to the Public Employment Service (AMS), which confirms the points, the pay and, for key workers, the labour market test. After 21 months of qualifying work in the preceding 24 months the holder can move to the Red-White-Red Card plus, which gives free access to the labour market.",
+    whoFilesShort: "Worker abroad, or employer in Austria",
     whoApplies:
       "The worker applies in person at the Austrian representation authority (embassy or consulate) in the country of residence. Alternatively the prospective employer files the application in Austria with the competent residence authority on the worker's behalf. Workers who are already in Austria legally, for example during a visa-free stay, can file in person with the residence authority. An employer's declaration (Arbeitgebererklärung) must accompany every application.",
     authorities: [

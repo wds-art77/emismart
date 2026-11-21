@@ -13,6 +13,7 @@ export const dk: Country =
     tagline: "National schemes run by SIRI: Pay Limit, Positive Lists and Fast-track, with no EU single permit rules and decisions normally within a month.",
     overview:
       "Denmark does not take part in EU legal migration directives, so the Single Permit Directive and its 2024 recast do not apply. Non-EU workers instead use one of the national work schemes administered by the Danish Agency for International Recruitment and Integration (SIRI). The most used is the Pay Limit Scheme, open to any job with a salary above a limit adjusted every 1 January, regardless of occupation. The Positive Lists cover shortage occupations for higher education and skilled work, and the Fast-track Scheme lets SIRI-certified companies obtain permits quickly, including a quick job start. Each scheme produces one residence and work permit tied to the job and employer.",
+    whoFilesShort: "Employer and worker jointly",
     whoApplies:
       "The application is made online to SIRI and has two parts: in form AR1 the employer completes the first part and the worker the second, using the same email address, while in form AR6 the employer applies alone with a power of attorney from the worker. Either party can create the case order ID and pay the fee. Under Fast-track the certified employer normally files with power of attorney. The worker must record biometrics within 14 days of submission.",
     authorities: [

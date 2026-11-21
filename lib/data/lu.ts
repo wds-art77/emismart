@@ -13,6 +13,7 @@ export const lu: Country =
     tagline: "ADEM vacancy declaration first, then a temporary authorisation to stay issued by the Immigration Directorate.",
     overview:
       "In Luxembourg the work authorisation is embedded in the residence permit. Since July 2013 there is no separate work permit document. The employer first declares the vacancy to the national employment agency ADEM. The worker then applies from abroad for a temporary authorisation to stay as a salaried worker, enters with a visa where required, and completes the residence permit formalities within 3 months.",
+    whoFilesShort: "Worker, after employer ADEM step",
     whoApplies:
       "The worker applies to the Immigration Directorate before entering Luxembourg, with the employer's documents attached. The employer handles the ADEM vacancy declaration and provides the certificate.",
     authorities: [

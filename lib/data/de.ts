@@ -13,6 +13,7 @@ export const de: Country =
     tagline: "The residence permit is the single permit. Employers can accelerate it through the fast-track procedure.",
     overview:
       "Germany does not issue a separate work permit. The residence title itself authorises employment, with the Federal Employment Agency (BA) giving internal approval where required. Since the Skilled Immigration Act reforms of 2023 and 2024, skilled workers with a recognised vocational or academic qualification and a concrete job offer are entitled to a permit. Employers can use the fast-track procedure under § 81a AufenthG to shorten each stage.",
+    whoFilesShort: "Worker, employer may fast-track",
     whoApplies:
       "The worker applies for the visa at the German embassy or consulate and later for the residence permit at the local foreigners authority (Ausländerbehörde). In the fast-track procedure the employer initiates the file with the Ausländerbehörde on the worker's behalf.",
     authorities: [

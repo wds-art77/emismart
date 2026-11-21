@@ -13,6 +13,7 @@ export const pl: Country =
     tagline: "Filed by the worker in Poland through the MOS portal, with the employer's Annex 1, and decided by the Voivode.",
     overview:
       "Poland's single permit is the temporary residence and work permit granted by the Voivode (wojewoda) for non-seasonal work that justifies a stay of more than 3 months. It is applied for by the foreign worker while legally present in Poland, so most workers recruited from abroad first enter on a national visa issued on the basis of a separate work permit (zezwolenie na pracę) which the employer obtains from the Voivode through the praca.gov.pl portal. Since 1 June 2025 the Act on the conditions for the admissibility of entrusting work to foreigners has replaced the former labour market test with county lists of occupations for which permits are refused, and work permit applications are filed only electronically. Residence applications are filed through the Office for Foreigners' MOS portal.",
+    whoFilesShort: "Worker online, employer co-signs",
     whoApplies:
       "The foreign worker is the only party to the residence proceedings and files the application personally through the MOS portal, no later than the last day of legal stay in Poland. The employer completes and signs Annex 1 (załącznik nr 1) electronically through a link sent to its email address; the application cannot be submitted until that annex is in place. The employer files any separate work permit application itself through praca.gov.pl.",
     authorities: [
