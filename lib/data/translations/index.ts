@@ -8,12 +8,14 @@ import { nl } from "./nl";
 import { de } from "./de";
 import { permitNames } from "./permits";
 import { details as frDetails } from "./fr/index";
+import { details as deDetails } from "./de/index";
 
 const translations: Partial<Record<Locale, CountryTranslations>> = { fr, nl, de };
 const detailSets: Partial<Record<Locale, Record<CountryCode, CountryDetails>>> = {};
 registerDetailsInit();
 function registerDetailsInit() {
   detailSets.fr = frDetails;
+  detailSets.de = deDetails;
 }
 
 export function registerDetails(locale: Locale, d: Record<CountryCode, CountryDetails>) {
