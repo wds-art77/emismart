@@ -7,7 +7,7 @@ import { countries, type CountryCode } from "@/lib/countries";
 import { emptyAnswers, evaluate, type Answers } from "@/lib/eligibility";
 import { fmt } from "@/lib/i18n";
 import { Pill } from "@/components/ui";
-import { useT } from "@/components/locale";
+import { useT, useCountryName } from "@/components/locale";
 
 type Q = {
   key: keyof Answers;
@@ -19,6 +19,7 @@ type Q = {
 
 export function EligibilityForm() {
   const d = useT();
+  const cn = useCountryName();
   const q = d.eligibility.q;
   const r = d.eligibility.result;
   const params = useSearchParams();
@@ -33,7 +34,7 @@ export function EligibilityForm() {
     const afterOffer = (a: Answers) => a.nationality === "eu" || a.offer === "no";
     return [
       { key: "nationality", label: q.nationality, options: [{ value: "eu", label: q.nationalityEu }, { value: "third", label: q.nationalityThird }] },
-      { key: "country", label: q.country, options: countries.map((c) => ({ value: c.code, label: `${c.flag} ${c.name}` })), skipIf: (a) => a.nationality === "eu" },
+      { key: "country", label: q.country, options: countries.map((c) => ({ value: c.code, label: `${c.flag} ${cn(c)}` })), skipIf: (a) => a.nationality === "eu" },
       { key: "offer", label: q.offer, options: [{ value: "yes", label: q.yes }, { value: "no", label: q.notYet }], skipIf: (a) => a.nationality === "eu" },
       { key: "location", label: q.location, options: [{ value: "abroad", label: q.abroad }, { value: "inside", label: q.inside }], skipIf: afterOffer },
       { key: "contract", label: q.contract, options: [{ value: "cdi", label: q.cdi }, { value: "cdd", label: q.cdd }], skipIf: afterOffer },
@@ -49,7 +50,7 @@ export function EligibilityForm() {
   const progress = Math.round((index / visible.length) * 100);
 
   if (done || !current) {
-    const result = evaluate(answers, d.eligibility.outcomes);
+    const result = evaluate(answers, d.eligibility.outcomes, cn);
     const tone = result.confidence === "high" ? "green" : result.confidence === "medium" ? "navy" : "gold";
     return (
       <div className="rounded-3xl border border-navy-900/10 bg-sand-50 p-8">

@@ -4,13 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { countries, type CountryCode } from "@/lib/countries";
 import { Pill } from "@/components/ui";
-import { useT } from "@/components/locale";
+import { useT, useCountryName } from "@/components/locale";
 import { fmt } from "@/lib/i18n";
 
 type Party = "employer" | "employee";
 
 export function Checklist() {
   const d = useT();
+  const cn = useCountryName();
   const partyLabel = (p: Party) => (p === "employer" ? d.common.employer : d.common.employee);
   const params = useSearchParams();
   const preset = params.get("country") as CountryCode | null;
@@ -56,7 +57,7 @@ export function Checklist() {
           >
             {countries.map((c) => (
               <option key={c.code} value={c.code}>
-                {c.flag} {c.name}
+                {c.flag} {cn(c)}
               </option>
             ))}
           </select>
@@ -89,7 +90,7 @@ export function Checklist() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-sm text-navy-800/70">
-              {country.flag} {country.name} · {country.permitName}
+              {country.flag} {cn(country)} · {country.permitName}
             </p>
             <h2 className="mt-1 text-2xl font-semibold">{fmt(d.checklist.documents, { party: partyLabel(party) })}</h2>
           </div>

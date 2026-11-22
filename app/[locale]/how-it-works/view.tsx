@@ -2,11 +2,12 @@
 
 import { Button, Card, Container, Eyebrow, H1, H2, Lead, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useT } from "@/components/locale";
+import { useT, useCountryName } from "@/components/locale";
 import { countries } from "@/lib/countries";
 
 export function HowItWorksView() {
   const d = useT();
+  const cn = useCountryName();
   const h = d.howItWorks;
   return (
     <>
@@ -44,7 +45,7 @@ export function HowItWorksView() {
               <tbody>
                 {countries.map((c) => (
                   <tr key={c.code} className="border-t border-navy-900/10 align-top">
-                    <td className="whitespace-nowrap px-4 py-3 font-medium">{c.flag} {c.name}</td>
+                    <td className="whitespace-nowrap px-4 py-3 font-medium">{c.flag} {cn(c)}</td>
                     <td className="px-4 py-3 text-navy-800/85">{c.localName}</td>
                     <td className="px-4 py-3 text-navy-800/85">{c.singlePermitDirective ? d.common.singlePermit : d.common.nationalScheme}</td>
                     <td className="px-4 py-3 text-navy-800/85">{c.whoFilesShort}</td>

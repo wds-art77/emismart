@@ -3,11 +3,12 @@
 import { Link } from "@/components/link";
 import { Container, Eyebrow, H1, Lead, Pill, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useT } from "@/components/locale";
+import { useT, useCountryName } from "@/components/locale";
 import { countriesByRegion, regions } from "@/lib/countries";
 
 export function CountriesView() {
   const d = useT();
+  const cn = useCountryName();
   return (
     <Section>
       <Container>
@@ -28,7 +29,7 @@ export function CountriesView() {
                     <span className="text-3xl">{c.flag}</span>
                     <Pill tone={c.singlePermitDirective ? "navy" : "gold"}>{c.singlePermitDirective ? d.common.singlePermit : d.common.nationalScheme}</Pill>
                   </div>
-                  <h3 className="mt-4 text-2xl font-semibold">{c.name}</h3>
+                  <h3 className="mt-4 text-2xl font-semibold">{cn(c)}</h3>
                   <p className="mt-1 text-sm text-navy-800/70">{c.localName}</p>
                   <p className="mt-3 text-sm leading-relaxed text-navy-800/85">{c.tagline}</p>
                   <dl className="mt-5 grid grid-cols-2 gap-3 text-xs">

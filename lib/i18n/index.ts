@@ -13,3 +13,13 @@ export const isLocale = (s: string | null | undefined): s is Locale => !!s && (l
 export function fmt(s: string, vars?: Record<string, string | number>): string {
   return s.replace(/\{(\w+)\}/g, (_, k: string) => (vars && vars[k] !== undefined ? String(vars[k]) : `{${k}}`));
 }
+
+/** Localized country name from the ISO code, falling back to the English name in the data. */
+export function countryName(code: string, locale: Locale, fallback: string): string {
+  try {
+    const region = code === "gr" ? "GR" : code.toUpperCase();
+    return new Intl.DisplayNames([locale], { type: "region" }).of(region) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { dicts, locales, type Dict, type Locale } from "@/lib/i18n";
+import { countryName, dicts, locales, type Dict, type Locale } from "@/lib/i18n";
 
 type Ctx = { locale: Locale; d: Dict };
 const LocaleContext = createContext<Ctx>({ locale: "en", d: dicts.en });
@@ -13,6 +13,12 @@ export function LocaleProvider({ locale, children }: { locale: Locale; children:
 
 export function useT(): Dict {
   return useContext(LocaleContext).d;
+}
+
+/** Returns a function giving the localized name of a country object. */
+export function useCountryName() {
+  const { locale } = useContext(LocaleContext);
+  return (c: { code: string; name: string }) => countryName(c.code, locale, c.name);
 }
 
 export function useLocale() {

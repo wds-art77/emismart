@@ -3,11 +3,12 @@
 import { Link } from "@/components/link";
 import { Button, Card, Container, Eyebrow, H1, H2, Lead, Pill, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useT } from "@/components/locale";
+import { useT, useCountryName } from "@/components/locale";
 import { countries, countriesByRegion, euRecast, regions } from "@/lib/countries";
 
 export function HomeView() {
   const d = useT();
+  const cn = useCountryName();
   const h = d.home;
   return (
     <>
@@ -29,7 +30,7 @@ export function HomeView() {
                     <li key={c.code}>
                       <Link href={`/countries/${c.code}`} className="flex items-center gap-2 text-sm font-medium hover:text-navy-700 hover:underline">
                         <span>{c.flag}</span>
-                        <span>{c.name}</span>
+                        <span>{cn(c)}</span>
                       </Link>
                     </li>
                   ))}
@@ -80,7 +81,7 @@ export function HomeView() {
                   {countries.map((c) => (
                     <tr key={c.code} className="border-t border-navy-900/10 align-top">
                       <td className="px-4 py-3 font-medium">
-                        <Link href={`/countries/${c.code}`} className="hover:underline">{c.flag} {c.name}</Link>
+                        <Link href={`/countries/${c.code}`} className="hover:underline">{c.flag} {cn(c)}</Link>
                       </td>
                       <td className="px-4 py-3 text-navy-800/80">{c.whoFilesShort}</td>
                       <td className="px-4 py-3 text-navy-800/80">{c.decisionPeriod.split(".")[0]}.</td>

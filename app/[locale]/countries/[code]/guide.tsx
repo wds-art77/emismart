@@ -3,7 +3,7 @@
 import { Link } from "@/components/link";
 import { Button, Card, Container, Eyebrow, H1, Lead, Pill, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useLocale, useT } from "@/components/locale";
+import { useLocale, useT, useCountryName } from "@/components/locale";
 import { fmt } from "@/lib/i18n";
 import type { Country } from "@/lib/types";
 
@@ -16,6 +16,7 @@ const actorTone: Record<string, "navy" | "gold" | "green" | "grey"> = {
 
 export function CountryGuide({ c }: { c: Country }) {
   const d = useT();
+  const cn = useCountryName();
   const { locale } = useLocale();
   const g = d.guide;
   const actorLabel = (a: string) =>
@@ -30,7 +31,7 @@ export function CountryGuide({ c }: { c: Country }) {
             <span className="text-5xl">{c.flag}</span>
             <div>
               <Eyebrow>{c.permitName}</Eyebrow>
-              <H1 className="mt-1">{c.name}</H1>
+              <H1 className="mt-1">{cn(c)}</H1>
             </div>
           </div>
           <p className="mt-3 text-lg text-navy-800/70">{c.localName}</p>
@@ -40,7 +41,7 @@ export function CountryGuide({ c }: { c: Country }) {
           <Lead>{c.overview}</Lead>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button href={`/checklist?country=${c.code}`}>{g.checklistCta}</Button>
-            <Button href={`/eligibility?country=${c.code}`} variant="secondary">{fmt(g.eligibilityCta, { country: c.name })}</Button>
+            <Button href={`/eligibility?country=${c.code}`} variant="secondary">{fmt(g.eligibilityCta, { country: cn(c) })}</Button>
           </div>
         </Container>
       </Section>

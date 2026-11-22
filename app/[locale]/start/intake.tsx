@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { countries, type CountryCode } from "@/lib/countries";
 import { addPeriod, deadlines, noDeadlineNote } from "@/lib/deadlines";
 import { Pill } from "@/components/ui";
-import { useLocale, useT } from "@/components/locale";
+import { useLocale, useT, useCountryName } from "@/components/locale";
 import { fmt } from "@/lib/i18n";
 
 type MilestoneStatus = "todo" | "doing" | "done";
@@ -70,6 +70,7 @@ function fmtDate(d: Date, locale: string) {
 
 export function Intake() {
   const d = useT();
+  const cn = useCountryName();
   const t = d.tracker;
   const { locale } = useLocale();
   const partyLabel = (p: "employer" | "employee") => (p === "employer" ? d.common.employer : d.common.employee);
@@ -151,7 +152,7 @@ export function Intake() {
       d.review.intro,
       "",
       `${t.fields.role}: ${file.role ? t.roles[file.role] : ""}`,
-      `${t.destination}: ${country.name} (${country.permitName})`,
+      `${t.destination}: ${cn(country)} (${country.permitName})`,
       `${t.fields.employer}: ${file.employerName}`,
       `${t.fields.employee}: ${file.employeeName} (${file.nationality})`,
       `${t.fields.jobTitle}: ${file.jobTitle}`,
@@ -252,7 +253,7 @@ export function Intake() {
                 </option>
                 {countries.map((c) => (
                   <option key={c.code} value={c.code}>
-                    {c.flag} {c.name}
+                    {c.flag} {cn(c)}
                   </option>
                 ))}
               </select>
@@ -332,7 +333,7 @@ export function Intake() {
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-semibold">
-                  {country.flag} {fmt(t.inCountry, { permit: country.permitName, country: country.name })}
+                  {country.flag} {fmt(t.inCountry, { permit: country.permitName, country: cn(country) })}
                 </h2>
                 <p className="mt-1 text-sm text-navy-800/70">
                   {file.employeeName || d.common.employee} · {file.employerName || d.common.employer} · {file.jobTitle || t.jobTitle}
