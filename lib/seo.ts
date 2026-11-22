@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { dicts, isLocale, locales, type Dict } from "./i18n";
 
-export const SITE = "https://emismart.eu";
+export const SITE = "https://emismart.com";
 
 export function alternates(path: string): Metadata["alternates"] {
   return {

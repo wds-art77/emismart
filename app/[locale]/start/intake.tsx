@@ -162,7 +162,7 @@ export function Intake() {
       "",
       ...country.steps.map((s, i) => `${i + 1}. ${s.title}: ${t.status[file.milestones[i]?.status ?? "todo"]}${file.milestones[i]?.date ? ` (${file.milestones[i].date})` : ""}`),
     ];
-    const to = process.env.NEXT_PUBLIC_REVIEW_EMAIL ?? "";
+    const to = process.env.NEXT_PUBLIC_REVIEW_EMAIL ?? "weds@desaeger.be";
     window.location.href = `mailto:${to}?subject=${encodeURIComponent(fmt(d.review.subject, { ref: file.reference }))}&body=${encodeURIComponent(lines.join("\n"))}`;
   };
 

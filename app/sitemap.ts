@@ -3,7 +3,7 @@ import { countries } from "@/lib/countries";
 import { locales } from "@/lib/i18n";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://emismart.eu";
+  const base = "https://emismart.com";
   const now = new Date();
   const staticPages = ["", "/countries", "/eligibility", "/checklist", "/start", "/how-it-works", "/blue-card", "/employers", "/pricing", "/about", "/legal"];
   const paths = [...staticPages, ...countries.map((c) => `/countries/${c.code}`)];
