@@ -8,6 +8,7 @@ export const nl: Dict = {
     employers: "Werkgevers",
     pricing: "Tarieven",
     about: "Over ons",
+    blueCard: "Blauwe kaart",
     checkEligibility: "Check uw geschiktheid",
     language: "Taal",
     menu: "Menu openen",
@@ -379,6 +380,20 @@ export const nl: Dict = {
       { title: "4. Overheidskosten", body: "Kosten die overheidsinstanties aanrekenen, worden door de gebruiker of de werkgever rechtstreeks aan de instantie betaald en zijn nooit inbegrepen in de prijzen van Emismart." },
       { title: "5. Beroepsregels", body: "Advocaten die via Emismart diensten verlenen, blijven gebonden aan de regels van hun balie, onder meer inzake onafhankelijkheid, belangenconflicten, beroepsgeheim en erelonen. Emismart mengt zich niet in de relatie tussen advocaat en cliënt." },
     ],
+  },
+  blueCard: {
+    eyebrow: "Europese blauwe kaart",
+    title: "De Europese blauwe kaart, land per land.",
+    lead: "De blauwe kaart is de EU-brede vergunning voor hooggekwalificeerde werknemers. Zij bestaat in 25 lidstaten; Denemarken en Ierland nemen niet deel. De richtlijn bepaalt het kader en elk land stelt jaarlijks zijn eigen salarisdrempel vast. Hieronder de gemeenschappelijke regels, daarna hoe elk land de blauwe kaart naast zijn gecombineerde vergunning plaatst.",
+    directiveTitle: "Wat Richtlijn (EU) 2021/1883 garandeert",
+    byCountry: "Per land",
+    notParticipating: "Neemt niet deel aan de Europese blauwe kaart",
+    seeGuide: "Gids {country} openen",
+  },
+  review: {
+    button: "Beoordeling door advocaat aanvragen",
+    subject: "Emismart-dossier {ref}: verzoek om beoordeling",
+    intro: "Gelieve het volgende dossier te beoordelen.",
   },
   notFound: { title: "Pagina niet gevonden", lead: "De pagina die u zoekt bestaat niet of is verplaatst.", cta: "Terug naar de startpagina" },
 };

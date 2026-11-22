@@ -6,6 +6,7 @@ export const en = {
     employers: "Employers",
     pricing: "Pricing",
     about: "About",
+    blueCard: "EU Blue Card",
     checkEligibility: "Check eligibility",
     language: "Language",
     menu: "Toggle menu",
@@ -377,6 +378,20 @@ export const en = {
       { title: "4. Government fees", body: "Fees charged by public authorities are paid by the user or the employer directly to the authority and are never included in Emismart's prices." },
       { title: "5. Professional rules", body: "Lawyers who provide services through Emismart remain bound by the rules of their bar, including on independence, conflicts of interest, professional secrecy and fees. Emismart does not interfere with the lawyer-client relationship." },
     ],
+  },
+  blueCard: {
+    eyebrow: "EU Blue Card",
+    title: "The EU Blue Card, country by country.",
+    lead: "The Blue Card is the EU-wide permit for highly qualified workers. It exists in 25 member states; Denmark and Ireland do not take part. The directive sets the frame and each country sets its own salary threshold every year. Below, the common rules, then how each country positions the Blue Card next to its single permit.",
+    directiveTitle: "What Directive (EU) 2021/1883 guarantees",
+    byCountry: "By country",
+    notParticipating: "Does not take part in the EU Blue Card",
+    seeGuide: "Open the {country} guide",
+  },
+  review: {
+    button: "Request lawyer review",
+    subject: "Emismart case {ref}: request for review",
+    intro: "Please review the following case file.",
   },
   notFound: { title: "Page not found", lead: "The page you are looking for does not exist or has moved.", cta: "Back to the home page" },
 };

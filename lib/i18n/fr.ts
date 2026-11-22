@@ -8,6 +8,7 @@ export const fr: Dict = {
     employers: "Employeurs",
     pricing: "Tarifs",
     about: "À propos",
+    blueCard: "Carte bleue",
     checkEligibility: "Vérifier mon éligibilité",
     language: "Langue",
     menu: "Ouvrir le menu",
@@ -379,6 +380,20 @@ export const fr: Dict = {
       { title: "4. Redevances publiques", body: "Les redevances perçues par les autorités publiques sont payées par l'utilisateur ou l'employeur directement à l'autorité et ne sont jamais incluses dans les prix d'Emismart." },
       { title: "5. Règles professionnelles", body: "Les avocats qui fournissent des services via Emismart restent soumis aux règles de leur barreau, notamment en matière d'indépendance, de conflits d'intérêts, de secret professionnel et d'honoraires. Emismart n'interfère pas dans la relation entre l'avocat et son client." },
     ],
+  },
+  blueCard: {
+    eyebrow: "Carte bleue européenne",
+    title: "La carte bleue européenne, pays par pays.",
+    lead: "La carte bleue est le titre européen pour travailleurs hautement qualifiés. Elle existe dans 25 États membres ; le Danemark et l'Irlande n'y participent pas. La directive fixe le cadre et chaque pays fixe son propre seuil salarial chaque année. Ci-dessous, les règles communes, puis la place que chaque pays donne à la carte bleue à côté de son permis unique.",
+    directiveTitle: "Ce que garantit la directive (UE) 2021/1883",
+    byCountry: "Par pays",
+    notParticipating: "Ne participe pas à la carte bleue européenne",
+    seeGuide: "Ouvrir le guide {country}",
+  },
+  review: {
+    button: "Demander une relecture par un avocat",
+    subject: "Dossier Emismart {ref} : demande de relecture",
+    intro: "Merci de relire le dossier suivant.",
   },
   notFound: { title: "Page introuvable", lead: "La page que vous cherchez n'existe pas ou a été déplacée.", cta: "Retour à l'accueil" },
 };

@@ -36,6 +36,7 @@ export function Footer() {
             <li><Link href="/eligibility" className="text-white/85 hover:text-white">{d.footer.eligibility}</Link></li>
             <li><Link href="/checklist" className="text-white/85 hover:text-white">{d.footer.checklist}</Link></li>
             <li><Link href="/start" className="text-white/85 hover:text-white">{d.footer.start}</Link></li>
+            <li><Link href="/blue-card" className="text-white/85 hover:text-white">{d.nav.blueCard}</Link></li>
             <li><Link href="/how-it-works" className="text-white/85 hover:text-white">{d.footer.howItWorks}</Link></li>
           </ul>
         </div>

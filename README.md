@@ -35,6 +35,10 @@ Points that could not be confirmed on an official page are flagged in the text i
   redirects bare URLs to the visitor's saved choice (cookie) or browser language. The English dictionary defines the
   type, so the compiler guarantees the other three are complete. Country guide content stays in English pending legal
   review; a note says so in the other languages.
+- EU Blue Card page (`/blue-card`): the common rules of Directive (EU) 2021/1883 and each country's positioning of the
+  Blue Card, drawn from the country data.
+- "Request lawyer review" in the tracker: builds a summary of the case and opens the mail client; the recipient address
+  is set with `NEXT_PUBLIC_REVIEW_EMAIL` (see `.env.example`).
 - Sitemap and robots routes, print styles, responsive layout.
 
 All legal content is indicative, summarises publicly available official guidance and links to its sources. It is not
@@ -56,6 +60,12 @@ Production build:
 
 ```bash
 npm run build && npm start
+```
+
+End-to-end smoke tests (after a build; needs the `playwright` package and a Chromium it can launch):
+
+```bash
+npm run e2e
 ```
 
 ## Roadmap to a Boundless-style platform

@@ -5,7 +5,7 @@ import { locales } from "@/lib/i18n";
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://emismart.eu";
   const now = new Date();
-  const staticPages = ["", "/countries", "/eligibility", "/checklist", "/start", "/how-it-works", "/employers", "/pricing", "/about", "/legal"];
+  const staticPages = ["", "/countries", "/eligibility", "/checklist", "/start", "/how-it-works", "/blue-card", "/employers", "/pricing", "/about", "/legal"];
   const paths = [...staticPages, ...countries.map((c) => `/countries/${c.code}`)];
   return paths.flatMap((p) =>
     locales.map((l) => ({

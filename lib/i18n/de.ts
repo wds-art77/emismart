@@ -8,6 +8,7 @@ export const de: Dict = {
     employers: "Arbeitgeber",
     pricing: "Preise",
     about: "Über uns",
+    blueCard: "Blaue Karte",
     checkEligibility: "Voraussetzungen prüfen",
     language: "Sprache",
     menu: "Menü öffnen",
@@ -379,6 +380,20 @@ export const de: Dict = {
       { title: "4. Behördengebühren", body: "Gebühren, die Behörden erheben, zahlt der Nutzer oder der Arbeitgeber direkt an die Behörde; sie sind nie in den Preisen von Emismart enthalten." },
       { title: "5. Berufsregeln", body: "Anwälte, die über Emismart Dienste erbringen, bleiben an die Regeln ihrer Kammer gebunden, einschließlich Unabhängigkeit, Interessenkonflikte, Berufsgeheimnis und Honorare. Emismart greift nicht in das Mandatsverhältnis ein." },
     ],
+  },
+  blueCard: {
+    eyebrow: "Blaue Karte EU",
+    title: "Die Blaue Karte EU, Land für Land.",
+    lead: "Die Blaue Karte ist der EU-weite Titel für hochqualifizierte Arbeitnehmer. Es gibt sie in 25 Mitgliedstaaten; Dänemark und Irland nehmen nicht teil. Die Richtlinie setzt den Rahmen, und jedes Land legt jährlich seine eigene Gehaltsschwelle fest. Unten die gemeinsamen Regeln, dann wie jedes Land die Blaue Karte neben seiner kombinierten Erlaubnis einordnet.",
+    directiveTitle: "Was die Richtlinie (EU) 2021/1883 garantiert",
+    byCountry: "Nach Land",
+    notParticipating: "Nimmt nicht an der Blauen Karte EU teil",
+    seeGuide: "Leitfaden {country} öffnen",
+  },
+  review: {
+    button: "Anwaltliche Prüfung anfordern",
+    subject: "Emismart-Akte {ref}: Bitte um Prüfung",
+    intro: "Bitte prüfen Sie die folgende Akte.",
   },
   notFound: { title: "Seite nicht gefunden", lead: "Die gesuchte Seite existiert nicht oder wurde verschoben.", cta: "Zurück zur Startseite" },
 };

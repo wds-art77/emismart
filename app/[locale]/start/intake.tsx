@@ -145,6 +145,27 @@ export function Intake() {
     setTab("overview");
   };
 
+  const requestReview = () => {
+    if (!country) return;
+    const lines = [
+      d.review.intro,
+      "",
+      `${t.fields.role}: ${file.role ? t.roles[file.role] : ""}`,
+      `${t.destination}: ${country.name} (${country.permitName})`,
+      `${t.fields.employer}: ${file.employerName}`,
+      `${t.fields.employee}: ${file.employeeName} (${file.nationality})`,
+      `${t.fields.jobTitle}: ${file.jobTitle}`,
+      `${t.fields.startDate}: ${file.startDate}`,
+      `${t.filedOn}: ${file.filedOn}`,
+      "",
+      `${t.notes}: ${file.notes}`,
+      "",
+      ...country.steps.map((s, i) => `${i + 1}. ${s.title}: ${t.status[file.milestones[i]?.status ?? "todo"]}${file.milestones[i]?.date ? ` (${file.milestones[i].date})` : ""}`),
+    ];
+    const to = process.env.NEXT_PUBLIC_REVIEW_EMAIL ?? "";
+    window.location.href = `mailto:${to}?subject=${encodeURIComponent(fmt(d.review.subject, { ref: file.reference }))}&body=${encodeURIComponent(lines.join("\n"))}`;
+  };
+
   const exportJson = () => {
     const blob = new Blob([JSON.stringify(file, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -467,6 +488,9 @@ export function Intake() {
             )}
 
             <div className="no-print mt-8 flex flex-wrap gap-3 border-t border-navy-900/10 pt-6">
+              <button onClick={requestReview} className="rounded-full bg-gold-500 px-6 py-3 text-sm font-semibold text-navy-950 hover:bg-gold-600">
+                {d.review.button}
+              </button>
               <button onClick={() => window.print()} className="rounded-full border border-navy-900/20 px-6 py-3 text-sm font-semibold text-navy-900 hover:border-navy-900/50">
                 {t.print}
               </button>

@@ -30,6 +30,7 @@ export function Nav() {
   const { locale } = useLocale();
   const links = [
     { href: "/countries", label: d.nav.countries },
+    { href: "/blue-card", label: d.nav.blueCard },
     { href: "/how-it-works", label: d.nav.howItWorks },
     { href: "/employers", label: d.nav.employers },
     { href: "/pricing", label: d.nav.pricing },
