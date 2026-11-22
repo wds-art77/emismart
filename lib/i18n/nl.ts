@@ -121,7 +121,7 @@ export const nl: Dict = {
     legalBasis: "Rechtsgrond",
     sources: "Officiële bronnen",
     languages: "Talen van de procedure: {languages}.",
-    contentNote: "De landengidsen zijn momenteel in het Engels gepubliceerd. Vertalingen naar het Frans, Nederlands en Duits volgen na de juridische controle van elke gids.",
+    contentNote: "De gedetailleerde stappen, documentenlijsten, alternatieve routes en aandachtspunten van deze gids zijn nog in het Engels. Hun vertaling volgt na de juridische controle van elke gids.",
   },
   eligibility: {
     eyebrow: "Voorwaardencheck",

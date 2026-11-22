@@ -121,7 +121,7 @@ export const de: Dict = {
     legalBasis: "Rechtsgrundlage",
     sources: "Amtliche Quellen",
     languages: "Verfahrenssprachen: {languages}.",
-    contentNote: "Die Länderleitfäden sind derzeit auf Englisch veröffentlicht. Übersetzungen ins Französische, Niederländische und Deutsche folgen nach der juristischen Prüfung jedes Leitfadens.",
+    contentNote: "Die detaillierten Schritte, Dokumentenlisten, alternativen Wege und Fallstricke dieses Leitfadens sind noch auf Englisch. Ihre Übersetzung folgt nach der juristischen Prüfung jedes Leitfadens.",
   },
   eligibility: {
     eyebrow: "Prüfung der Voraussetzungen",

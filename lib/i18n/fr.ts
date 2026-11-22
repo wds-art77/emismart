@@ -121,7 +121,7 @@ export const fr: Dict = {
     legalBasis: "Base légale",
     sources: "Sources officielles",
     languages: "Langues de la procédure : {languages}.",
-    contentNote: "Les guides par pays sont actuellement publiés en anglais. Les traductions en français, néerlandais et allemand suivront la revue juridique de chaque guide.",
+    contentNote: "Les étapes détaillées, les listes de documents, les voies alternatives et les points de vigilance de ce guide sont encore en anglais. Leur traduction suivra la revue juridique de chaque guide.",
   },
   eligibility: {
     eyebrow: "Vérification d'éligibilité",
