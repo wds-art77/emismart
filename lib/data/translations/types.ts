@@ -1,4 +1,4 @@
-import type { CountryCode } from "../../types";
+import type { CountryCode, Doc, Route, Step } from "../../types";
 
 /** Translated summary fields of a country guide. Steps, documents, routes and watch-outs stay in English pending legal review. */
 export type CountrySummary = {
@@ -19,4 +19,15 @@ export type CountryTranslations = {
   noDeadlineNotes: Partial<Record<CountryCode, string>>;
   /** Translated lib/bluecard.ts points, same order and count. */
   blueCardPoints: string[];
+};
+
+/** Translated detailed sections of a country guide. Arrays must keep the exact length and order of the English source. */
+export type CountryDetails = {
+  authorities: string[];
+  legalBasis: string[];
+  steps: Step[];
+  employerDocs: Doc[];
+  employeeDocs: Doc[];
+  alternativeRoutes: Route[];
+  watchOuts: string[];
 };
