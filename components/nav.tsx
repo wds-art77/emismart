@@ -3,22 +3,22 @@
 import { Link } from "@/components/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 import { Container } from "./ui";
 import { LanguageSwitcher, useLocale, useT } from "./locale";
 
-export function Logo({ dark = false }: { dark?: boolean }) {
+export function Logo({ dark = false, height = 36 }: { dark?: boolean; height?: number }) {
+  const width = Math.round(height * (1198 / 198));
   return (
-    <Link href="/" className="flex items-center gap-2" aria-label="Emismart home">
-      <span
-        className={`flex h-9 w-9 items-center justify-center rounded-lg font-serif text-lg font-bold ${
-          dark ? "bg-white text-navy-950" : "bg-navy-950 text-white"
-        }`}
-      >
-        E
-      </span>
-      <span className={`font-serif text-xl font-semibold tracking-tight ${dark ? "text-white" : "text-navy-950"}`}>
-        Emismart
-      </span>
+    <Link href="/" className="flex shrink-0 items-center" aria-label="Emismart home">
+      <Image
+        src={dark ? "/brand/logo-white.png" : "/brand/logo-blue.png"}
+        alt="Emismart. European migration simplified"
+        width={width}
+        height={height}
+        priority
+        style={{ height, width: "auto" }}
+      />
     </Link>
   );
 }
@@ -30,7 +30,6 @@ export function Nav() {
   const { locale } = useLocale();
   const links = [
     { href: "/countries", label: d.nav.countries },
-    { href: "/blue-card", label: d.nav.blueCard },
     { href: "/how-it-works", label: d.nav.howItWorks },
     { href: "/employers", label: d.nav.employers },
     { href: "/pricing", label: d.nav.pricing },
@@ -38,14 +37,14 @@ export function Nav() {
   ];
   return (
     <nav className="sticky top-0 z-40 border-b border-navy-900/10 bg-white/90 backdrop-blur">
-      <Container className="flex h-16 items-center justify-between">
+      <Container className="flex h-16 items-center justify-between gap-6">
         <Logo />
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-5 xl:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className={`text-sm font-medium transition hover:text-navy-700 ${
+              className={`whitespace-nowrap text-sm font-medium transition hover:text-navy-700 ${
                 pathname.startsWith(`/${locale}${l.href}`) ? "text-navy-900" : "text-navy-900/70"
               }`}
             >
@@ -55,12 +54,12 @@ export function Nav() {
           <LanguageSwitcher />
           <Link
             href="/eligibility"
-            className="rounded-full bg-navy-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-navy-800"
+            className="whitespace-nowrap rounded-full bg-navy-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-navy-800"
           >
             {d.nav.checkEligibility}
           </Link>
         </div>
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <LanguageSwitcher />
           <button className="rounded-md p-2 text-navy-900" aria-label={d.nav.menu} aria-expanded={open} onClick={() => setOpen(!open)}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -70,9 +69,9 @@ export function Nav() {
         </div>
       </Container>
       {open && (
-        <div className="border-t border-navy-900/10 bg-white md:hidden">
+        <div className="border-t border-navy-900/10 bg-white xl:hidden">
           <Container className="flex flex-col gap-1 py-3">
-            {links.map((l) => (
+            {[...links, { href: "/blue-card", label: d.nav.blueCard }].map((l) => (
               <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-navy-900 hover:bg-navy-50">
                 {l.label}
               </Link>

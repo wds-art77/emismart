@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy-950: #0b1a33;
-  --color-navy-900: #10264a;
-  --color-navy-800: #163566;
-  --color-navy-700: #1f4587;
-  --color-navy-100: #e3eaf6;
-  --color-navy-50: #f3f6fb;
+  /* Brand blue from the logo: #003399 */
+  --color-navy-950: #0a1f4d;
+  --color-navy-900: #003399;
+  --color-navy-800: #0b3ea8;
+  --color-navy-700: #1d55c4;
+  --color-navy-100: #dde6f7;
+  --color-navy-50: #f1f5fc;
   --color-gold-600: #b8891f;
   --color-gold-500: #d4a338;
   --color-gold-100: #fbf1d9;
