@@ -1,4 +1,5 @@
 import { countryByCode, type CountryCode } from "./countries";
+import type { Country } from "./types";
 import { fmt, type Dict } from "./i18n";
 
 export type Answers = {
@@ -35,7 +36,7 @@ export type Outcome = {
 
 type O = Dict["eligibility"]["outcomes"];
 
-export function evaluate(a: Answers, o: O, name: (c: { code: string; name: string }) => string = (c) => c.name): Outcome {
+export function evaluate(a: Answers, o: O, name: (c: { code: string; name: string }) => string = (c) => c.name, localize: (c: Country) => Country = (c) => c): Outcome {
   if (a.nationality === "eu") {
     return { headline: o.eu.headline, route: o.eu.route, confidence: "high", summary: o.eu.summary, nextSteps: [...o.eu.next], alternatives: [...o.eu.alt], reviewRecommended: false };
   }
@@ -47,7 +48,8 @@ export function evaluate(a: Answers, o: O, name: (c: { code: string; name: strin
     return { headline: o.offerFirst.headline, route: o.offerFirst.route, confidence: "high", summary: o.offerFirst.summary, nextSteps: [...o.offerFirst.next], alternatives: [...o.offerFirst.alt], reviewRecommended: false };
   }
 
-  const c = countryByCode(a.country);
+  const raw = countryByCode(a.country);
+  const c = raw ? localize(raw) : undefined;
   const highDegree = a.qualification === "degree";
   const highSalary = a.salary === "high";
 

@@ -3,12 +3,14 @@
 import { Link } from "@/components/link";
 import { Button, Card, Container, Eyebrow, H1, H2, Lead, Pill, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useT, useCountryName } from "@/components/locale";
-import { countries, countriesByRegion, euRecast, regions } from "@/lib/countries";
+import { useT, useCountryName, useCountries } from "@/components/locale";
+import { euRecast, regions } from "@/lib/countries";
 
 export function HomeView() {
   const d = useT();
   const cn = useCountryName();
+  const countries = useCountries();
+  const countriesByRegion = (r: string) => countries.filter((c) => c.region === r);
   const h = d.home;
   return (
     <>

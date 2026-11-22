@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/components/link";
 import { useSearchParams } from "next/navigation";
-import { countries, type CountryCode } from "@/lib/countries";
-import { addPeriod, deadlines, noDeadlineNote } from "@/lib/deadlines";
+import type { CountryCode } from "@/lib/countries";
+import { addPeriod } from "@/lib/deadlines";
+import { localizedDeadline, localizedNoDeadlineNote } from "@/lib/data/translations";
 import { Pill } from "@/components/ui";
-import { useLocale, useT, useCountryName } from "@/components/locale";
+import { useLocale, useT, useCountryName, useCountries } from "@/components/locale";
 import { fmt } from "@/lib/i18n";
 
 type MilestoneStatus = "todo" | "doing" | "done";
@@ -71,6 +72,7 @@ function fmtDate(d: Date, locale: string) {
 export function Intake() {
   const d = useT();
   const cn = useCountryName();
+  const countries = useCountries();
   const t = d.tracker;
   const { locale } = useLocale();
   const partyLabel = (p: "employer" | "employee") => (p === "employer" ? d.common.employer : d.common.employee);
@@ -199,7 +201,7 @@ export function Intake() {
   const total = country?.steps.length ?? 0;
   const done = country ? country.steps.filter((_, i) => file.milestones[i]?.status === "done").length : 0;
   const progress = total ? Math.round((done / total) * 100) : 0;
-  const deadline = country ? deadlines[country.code] : null;
+  const deadline = country ? localizedDeadline(country.code, locale) : null;
   const filed = file.filedOn ? new Date(file.filedOn) : null;
   const due = filed && deadline ? addPeriod(filed, deadline) : null;
   const daysLeft = due ? Math.ceil((due.getTime() - Date.now()) / 86400000) : null;
@@ -388,7 +390,7 @@ export function Intake() {
                       <p className="mt-3 text-xs leading-relaxed text-navy-800/70">{deadline.note} {t.indicative}</p>
                     </>
                   ) : (
-                    <p className="mt-2 text-sm leading-relaxed text-navy-800/80">{noDeadlineNote[country.code]}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-navy-800/80">{localizedNoDeadlineNote(country.code, locale)}</p>
                   )}
                 </div>
 

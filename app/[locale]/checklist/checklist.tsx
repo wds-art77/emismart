@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { countries, type CountryCode } from "@/lib/countries";
+import type { CountryCode } from "@/lib/countries";
 import { Pill } from "@/components/ui";
-import { useT, useCountryName } from "@/components/locale";
+import { useT, useCountryName, useCountries } from "@/components/locale";
 import { fmt } from "@/lib/i18n";
 
 type Party = "employer" | "employee";
@@ -12,6 +12,7 @@ type Party = "employer" | "employee";
 export function Checklist() {
   const d = useT();
   const cn = useCountryName();
+  const countries = useCountries();
   const partyLabel = (p: Party) => (p === "employer" ? d.common.employer : d.common.employee);
   const params = useSearchParams();
   const preset = params.get("country") as CountryCode | null;

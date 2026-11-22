@@ -3,16 +3,24 @@
 import { Link } from "@/components/link";
 import { Container, Eyebrow, H1, H2, Lead, Pill, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useT, useCountryName } from "@/components/locale";
+import { useT, useCountryName, useCountries, useLocale } from "@/components/locale";
 import { fmt } from "@/lib/i18n";
-import { countries, countriesByRegion, regions } from "@/lib/countries";
+import { regions } from "@/lib/countries";
 import { blueCard } from "@/lib/bluecard";
+import { localizedBlueCardPoints } from "@/lib/data/translations";
 
-const blueRouteOf = (code: string) => countries.find((c) => c.code === code)?.alternativeRoutes.find((r) => /blue card|blaue karte|carte bleue/i.test(r.name)) ?? countries.find((c) => c.code === code)?.alternativeRoutes.find((r) => /blue card|carte bleue/i.test(r.summary));
 
 export function BlueCardView() {
   const d = useT();
   const cn = useCountryName();
+  const { locale } = useLocale();
+  const countries = useCountries();
+  const countriesByRegion = (r: string) => countries.filter((c) => c.region === r);
+  const points = localizedBlueCardPoints(locale);
+  const blueRouteOf = (code: string) => {
+    const c = countries.find((x) => x.code === code);
+    return c?.alternativeRoutes.find((r) => /blue card|blaue karte|carte bleue/i.test(r.name)) ?? c?.alternativeRoutes.find((r) => /blue card|carte bleue/i.test(r.summary));
+  };
   const b = d.blueCard;
   return (
     <>
@@ -27,7 +35,7 @@ export function BlueCardView() {
         <Container>
           <H2 className="text-white">{b.directiveTitle}</H2>
           <ul className="mt-8 grid gap-4 md:grid-cols-2">
-            {blueCard.points.map((p) => (
+            {points.map((p) => (
               <li key={p} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-4 text-sm leading-relaxed text-white/85">
                 <span className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-gold-500" />
                 {p}

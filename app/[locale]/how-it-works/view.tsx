@@ -2,12 +2,12 @@
 
 import { Button, Card, Container, Eyebrow, H1, H2, Lead, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useT, useCountryName } from "@/components/locale";
-import { countries } from "@/lib/countries";
+import { useT, useCountryName, useCountries } from "@/components/locale";
 
 export function HowItWorksView() {
   const d = useT();
   const cn = useCountryName();
+  const countries = useCountries();
   const h = d.howItWorks;
   return (
     <>

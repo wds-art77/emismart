@@ -3,11 +3,11 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Link } from "@/components/link";
-import { countries, type CountryCode } from "@/lib/countries";
+import type { CountryCode } from "@/lib/countries";
 import { emptyAnswers, evaluate, type Answers } from "@/lib/eligibility";
 import { fmt } from "@/lib/i18n";
 import { Pill } from "@/components/ui";
-import { useT, useCountryName } from "@/components/locale";
+import { useT, useCountryName, useCountries, useLocalizeCountry } from "@/components/locale";
 
 type Q = {
   key: keyof Answers;
@@ -20,6 +20,8 @@ type Q = {
 export function EligibilityForm() {
   const d = useT();
   const cn = useCountryName();
+  const countries = useCountries();
+  const localize = useLocalizeCountry();
   const q = d.eligibility.q;
   const r = d.eligibility.result;
   const params = useSearchParams();
@@ -50,7 +52,7 @@ export function EligibilityForm() {
   const progress = Math.round((index / visible.length) * 100);
 
   if (done || !current) {
-    const result = evaluate(answers, d.eligibility.outcomes, cn);
+    const result = evaluate(answers, d.eligibility.outcomes, cn, localize);
     const tone = result.confidence === "high" ? "green" : result.confidence === "medium" ? "navy" : "gold";
     return (
       <div className="rounded-3xl border border-navy-900/10 bg-sand-50 p-8">

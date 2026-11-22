@@ -4,6 +4,7 @@ import { countries, countryByCode } from "@/lib/countries";
 import { CountryGuide } from "./guide";
 import { alternates, OG_IMAGE } from "@/lib/seo";
 import { countryName, isLocale } from "@/lib/i18n";
+import { localizeCountry } from "@/lib/data/translations";
 
 type Params = { code: string };
 
@@ -15,13 +16,15 @@ export async function generateMetadata({ params }: { params: Promise<Params & { 
   const { code, locale } = await params;
   const c = countryByCode(code);
   if (!c) return {};
-  const name = countryName(c.code, isLocale(locale) ? locale : "en", c.name);
-  return { title: `${name}: ${c.permitName}`, description: `${c.localName}. ${c.tagline}`, alternates: alternates(`/countries/${c.code}`), openGraph: { title: `${name}: ${c.permitName}`, description: c.tagline, images: [OG_IMAGE] } };
+  const loc = isLocale(locale) ? locale : "en";
+  const name = countryName(c.code, loc, c.name);
+  const lc = localizeCountry(c, loc);
+  return { title: `${name}: ${c.permitName}`, description: `${c.localName}. ${lc.tagline}`, alternates: alternates(`/countries/${c.code}`), openGraph: { title: `${name}: ${c.permitName}`, description: lc.tagline, images: [OG_IMAGE] } };
 }
 
-export default async function CountryPage({ params }: { params: Promise<Params> }) {
-  const { code } = await params;
+export default async function CountryPage({ params }: { params: Promise<Params & { locale: string }> }) {
+  const { code, locale } = await params;
   const c = countryByCode(code);
   if (!c) notFound();
-  return <CountryGuide c={c} />;
+  return <CountryGuide c={localizeCountry(c, isLocale(locale) ? locale : "en")} />;
 }
