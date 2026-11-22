@@ -30,6 +30,13 @@ export default async function CasePage({ params, searchParams }: { params: Promi
   const canEdit = access.role !== "employee";
   const done = milestones.filter((m) => m.status === "done").length;
   const deadline = localizedDeadline(c.country as never, locale);
+  // Generated documents keep their English label in the database; show the localized label by position.
+  const localizedDoc = (party: "employer" | "employee", label: string) => {
+    const source = party === "employer" ? raw?.employerDocs : raw?.employeeDocs;
+    const target = party === "employer" ? country?.employerDocs : country?.employeeDocs;
+    const i = source?.findIndex((x) => x.label === label) ?? -1;
+    return i >= 0 && target?.[i] ? target[i] : null;
+  };
   const input = "rounded-lg border border-navy-900/20 px-2 py-1 text-xs";
   const btn = "rounded-full bg-navy-900 px-4 py-2 text-xs font-semibold text-white hover:bg-navy-800";
   const btn2 = "rounded-full border border-navy-900/20 px-4 py-2 text-xs font-semibold text-navy-900 hover:border-navy-900/50";
@@ -148,8 +155,8 @@ export default async function CasePage({ params, searchParams }: { params: Promi
                   {docs.map((doc) => (
                     <li key={doc.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium">{doc.label}</p>
-                        {doc.note && <p className="text-xs text-navy-800/60">{doc.note}</p>}
+                        <p className="font-medium">{localizedDoc(party, doc.label)?.label ?? doc.label}</p>
+                        {(localizedDoc(party, doc.label)?.note ?? doc.note) && <p className="text-xs text-navy-800/60">{localizedDoc(party, doc.label)?.note ?? doc.note}</p>}
                         {doc.filename && <p className="mt-1 text-xs text-navy-800/70">{doc.filename} · {Math.round((doc.size ?? 0) / 1024)} KB · {doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleDateString(locale) : ""}</p>}
                         {doc.reviewNote && doc.status === "rejected" && <p className="mt-1 text-xs text-red-700">{doc.reviewNote}</p>}
                       </div>
