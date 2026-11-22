@@ -1,12 +1,10 @@
-import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { Suspense } from "react";
 import { Intake } from "./intake";
 import { StartShell } from "./shell";
 
-export const metadata: Metadata = {
-  title: "Case file",
-  description: "Open an Emismart case file and track a work and residence permit application.",
-};
+export const generateMetadata = (p: { params: Promise<{ locale: string }> }) =>
+  pageMeta(p.params, "/start", (d) => ({ title: d.footer.start, description: d.tracker.lead }));
 
 export default function StartPage() {
   return (

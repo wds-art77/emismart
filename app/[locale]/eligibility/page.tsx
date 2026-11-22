@@ -1,12 +1,10 @@
-import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { Suspense } from "react";
 import { EligibilityForm } from "./form";
 import { EligibilityShell } from "./shell";
 
-export const metadata: Metadata = {
-  title: "Eligibility check",
-  description: "Find out which European work permit route fits your situation in a few questions.",
-};
+export const generateMetadata = (p: { params: Promise<{ locale: string }> }) =>
+  pageMeta(p.params, "/eligibility", (d) => ({ title: d.footer.eligibility, description: d.eligibility.lead }));
 
 export default function EligibilityPage() {
   return (

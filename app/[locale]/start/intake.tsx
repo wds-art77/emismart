@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { useSearchParams } from "next/navigation";
 import { countries, type CountryCode } from "@/lib/countries";
 import { addPeriod, deadlines, noDeadlineNote } from "@/lib/deadlines";

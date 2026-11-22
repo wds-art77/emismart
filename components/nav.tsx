@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Container } from "./ui";
-import { LanguageSwitcher, useT } from "./locale";
+import { LanguageSwitcher, useLocale, useT } from "./locale";
 
 export function Logo({ dark = false }: { dark?: boolean }) {
   return (
@@ -27,6 +27,7 @@ export function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const d = useT();
+  const { locale } = useLocale();
   const links = [
     { href: "/countries", label: d.nav.countries },
     { href: "/how-it-works", label: d.nav.howItWorks },
@@ -44,7 +45,7 @@ export function Nav() {
               key={l.href}
               href={l.href}
               className={`text-sm font-medium transition hover:text-navy-700 ${
-                pathname.startsWith(l.href) ? "text-navy-900" : "text-navy-900/70"
+                pathname.startsWith(`/${locale}${l.href}`) ? "text-navy-900" : "text-navy-900/70"
               }`}
             >
               {l.label}

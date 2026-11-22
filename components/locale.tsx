@@ -1,43 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { dicts, isLocale, locales, type Dict, type Locale } from "@/lib/i18n";
+import { createContext, useContext, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { dicts, locales, type Dict, type Locale } from "@/lib/i18n";
 
-type Ctx = { locale: Locale; setLocale: (l: Locale) => void; d: Dict };
-const LocaleContext = createContext<Ctx>({ locale: "en", setLocale: () => {}, d: dicts.en });
-const STORAGE = "emismart:locale";
+type Ctx = { locale: Locale; d: Dict };
+const LocaleContext = createContext<Ctx>({ locale: "en", d: dicts.en });
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE);
-      if (isLocale(stored)) {
-        setLocaleState(stored);
-        return;
-      }
-      const nav = navigator.language?.slice(0, 2).toLowerCase();
-      if (isLocale(nav)) setLocaleState(nav);
-    } catch {
-      // storage unavailable
-    }
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.lang = locale;
-  }, [locale]);
-
-  const setLocale = (l: Locale) => {
-    setLocaleState(l);
-    try {
-      localStorage.setItem(STORAGE, l);
-    } catch {
-      // ignore
-    }
-  };
-
-  return <LocaleContext.Provider value={{ locale, setLocale, d: dicts[locale] }}>{children}</LocaleContext.Provider>;
+export function LocaleProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
+  return <LocaleContext.Provider value={{ locale, d: dicts[locale] }}>{children}</LocaleContext.Provider>;
 }
 
 export function useT(): Dict {
@@ -45,7 +16,19 @@ export function useT(): Dict {
 }
 
 export function useLocale() {
-  const { locale, setLocale } = useContext(LocaleContext);
+  const { locale } = useContext(LocaleContext);
+  const router = useRouter();
+  const pathname = usePathname();
+  const setLocale = (next: Locale) => {
+    try {
+      document.cookie = `emismart_locale=${next}; path=/; max-age=31536000; samesite=lax`;
+    } catch {
+      // ignore
+    }
+    const rest = pathname.replace(/^\/(en|fr|nl|de)(?=\/|$)/, "");
+    const search = typeof window !== "undefined" ? window.location.search : "";
+    router.push(`/${next}${rest}${search}`);
+  };
   return { locale, setLocale };
 }
 

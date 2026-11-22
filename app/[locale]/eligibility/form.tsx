@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { countries, type CountryCode } from "@/lib/countries";
 import { emptyAnswers, evaluate, type Answers } from "@/lib/eligibility";
 import { fmt } from "@/lib/i18n";

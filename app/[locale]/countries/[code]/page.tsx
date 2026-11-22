@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { countries, countryByCode } from "@/lib/countries";
 import { CountryGuide } from "./guide";
+import { alternates } from "@/lib/seo";
 
 type Params = { code: string };
 
@@ -13,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { code } = await params;
   const c = countryByCode(code);
   if (!c) return {};
-  return { title: `${c.name}: ${c.permitName}`, description: `${c.localName}. ${c.tagline}` };
+  return { title: `${c.name}: ${c.permitName}`, description: `${c.localName}. ${c.tagline}`, alternates: alternates(`/countries/${c.code}`) };
 }
 
 export default async function CountryPage({ params }: { params: Promise<Params> }) {
