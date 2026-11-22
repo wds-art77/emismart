@@ -12,8 +12,9 @@ hosting runs PHP and WordPress and cannot run it. The standard setup is:
 ### Steps
 
 1. Create a Vercel account at vercel.com and connect GitHub.
-2. "Add New Project", import `wds-art77/emismart`, choose branch `claude/emismart-migration-platform-lpzdz7`
-   (or merge it into `main` first and deploy `main`). Framework is detected as Next.js; no build settings to change.
+2. "Add New Project", import `wds-art77/emismart`. Framework is detected as Next.js; no build settings to change.
+   Done on 22 November 2026: the project lives in the Vercel team `emismart`, production at https://emismart.vercel.app.
+   The production branch should be `main`; check it under Project, Settings, Git.
 3. Environment variables: `NEXT_PUBLIC_REVIEW_EMAIL = weds@desaeger.be` (optional; it is also the default in code).
 4. Deploy. Vercel gives a `*.vercel.app` URL within about two minutes.
 5. Project > Settings > Domains > add `emismart.com` and `www.emismart.com`.
