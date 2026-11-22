@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { dicts, isLocale, locales, type Dict } from "./i18n";
 
-export const SITE = "https://emismart.com";
+export const SITE = "https://www.emismart.com";
 export const OG_IMAGE = { url: "/brand/logo-banner.png", width: 1584, height: 396, alt: "Emismart. European migration simplified" };
 
 export function alternates(path: string): Metadata["alternates"] {
