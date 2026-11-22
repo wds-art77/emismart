@@ -16,7 +16,19 @@ const check = (name, ok, extra = "") => {
   if (!ok) failures++;
 };
 
-const server = spawn("npx", ["next", "start", "-p", PORT], { stdio: "ignore" });
+// Refuse to run against a stale server left on the port by an earlier run.
+try {
+  await fetch(`${base}/en`);
+  console.error(`Port ${PORT} is already in use; stop that server first.`);
+  process.exit(2);
+} catch {}
+
+const server = spawn("npx", ["next", "start", "-p", PORT], { stdio: "ignore", detached: true });
+const stopServer = () => {
+  try {
+    process.kill(-server.pid, "SIGTERM");
+  } catch {}
+};
 const waitFor = async () => {
   for (let i = 0; i < 60; i++) {
     try {
@@ -115,7 +127,7 @@ try {
   console.error(e);
   failures++;
 } finally {
-  server.kill();
+  stopServer();
 }
 console.log(failures ? `\n${failures} failure(s)` : "\nAll checks passed");
 process.exit(failures ? 1 : 0);
