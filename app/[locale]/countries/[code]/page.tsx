@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<Params & { 
   const loc = isLocale(locale) ? locale : "en";
   const name = countryName(c.code, loc, c.name);
   const lc = localizeCountry(c, loc);
-  return { title: `${name}: ${c.permitName}`, description: `${c.localName}. ${lc.tagline}`, alternates: alternates(`/countries/${c.code}`), openGraph: { title: `${name}: ${c.permitName}`, description: lc.tagline, images: [OG_IMAGE] } };
+  return { title: `${name}: ${lc.permitName}`, description: `${c.localName}. ${lc.tagline}`, alternates: alternates(`/countries/${c.code}`), openGraph: { title: `${name}: ${lc.permitName}`, description: lc.tagline, images: [OG_IMAGE] } };
 }
 
 export default async function CountryPage({ params }: { params: Promise<Params & { locale: string }> }) {

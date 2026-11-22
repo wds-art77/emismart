@@ -6,6 +6,7 @@ import type { CountryTranslations } from "./types";
 import { fr } from "./fr";
 import { nl } from "./nl";
 import { de } from "./de";
+import { permitNames } from "./permits";
 
 const translations: Partial<Record<Locale, CountryTranslations>> = { fr, nl, de };
 
@@ -13,7 +14,8 @@ const translations: Partial<Record<Locale, CountryTranslations>> = { fr, nl, de 
 export function localizeCountry(c: Country, locale: Locale): Country {
   const t = translations[locale]?.summaries[c.code];
   const name = countryName(c.code, locale, c.name);
-  return t ? { ...c, ...t, name } : { ...c, name };
+  const permitName = locale === "en" ? c.permitName : permitNames[locale][c.code];
+  return t ? { ...c, ...t, name, permitName } : { ...c, name, permitName };
 }
 
 export function localizedDeadline(code: CountryCode, locale: Locale): Deadline | null {
