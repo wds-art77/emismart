@@ -34,29 +34,59 @@ the server yet. For transactional mail later (confirmations, reminders), use a p
 example Resend or Postmark, sending from a `@emismart.com` address once the domain's SPF and DKIM records are added at
 GoDaddy.
 
-## 3. Database and documents: the production backend
+## 3. The case management backend
 
-The current version stores case files in the browser. For accounts, shared case files and document upload, add:
+The backend is built in and provider-neutral. It needs four things in production, all set as environment variables
+in Vercel (Project, Settings, Environment Variables). Without `DATABASE_URL` the public site works and the dashboard
+shows a "not configured" message, so nothing breaks before you are ready.
 
-| Need | Recommendation | Why |
+| Variable | What it is | Where to get it |
 | --- | --- | --- |
-| Database | **Supabase** (Postgres, region Frankfurt) or **Neon** (Postgres, region Frankfurt) | Managed Postgres in the EU, free tier for development, both sign a GDPR data processing agreement. Supabase also brings authentication and storage in one account. |
-| Authentication | Supabase Auth (e-mail magic link, Microsoft or Google sign-in for employers) | Employers, employees and counsel each get a role on a case file. |
-| Document storage | Supabase Storage (Frankfurt), private buckets, signed URLs | Passports, criminal record extracts and medical certificates must never be public. |
-| ORM | Prisma or Drizzle | Typed access from Next.js server actions and route handlers. |
-| Mail | Resend (EU) | Invitations to a case file, deadline reminders. |
+| `AUTH_SECRET` | Signs sessions and upload links. | `openssl rand -base64 32` |
+| `DATABASE_URL` | Postgres connection string. | Supabase (Project, Settings, Database, connection string, "Transaction" pooler) or Neon, region Frankfurt. |
+| `S3_BUCKET`, `S3_ENDPOINT`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | Private document bucket. | Supabase Storage (Project, Settings, Storage, S3 access keys; endpoint `https://<ref>.storage.supabase.co/storage/v1/s3`, region `eu-central-1`), or Cloudflare R2 with EU jurisdiction, or AWS S3 eu-central-1. Create the bucket **private**. |
+| `RESEND_API_KEY`, `MAIL_FROM` | Transactional mail: sign-in links, invitations, notifications. | resend.com, EU region; add the SPF and DKIM records Resend shows to the emismart.com DNS at GoDaddy, then use `Emismart <noreply@emismart.com>`. |
+| `CRON_SECRET` | Protects the daily reminder job (`vercel.json` schedules it at 07:00 UTC). | `openssl rand -base64 32`; Vercel sends it automatically. |
+| `REVIEW_EMAIL` | Receives escalations when a case has no lawyer member. | `weds@desaeger.be` |
+| `NEXT_PUBLIC_APP_URL` | Public URL used in e-mail links. | `https://www.emismart.com` |
 
-Data model, first version:
+Recommended order: Supabase project (database + storage in one account, EU region, signs a GDPR data processing
+agreement), then Resend, then set the variables and redeploy. The database schema is created automatically on first
+use from `lib/db/migrations`.
 
-- `organisations` (employer or law firm), `users`, `memberships` (role per organisation).
-- `cases` (country, permit route, reference, status, filed_on), `case_members` (user, role: employer, employee, lawyer).
-- `milestones` (case, step index, status, date, note), `documents` (case, party, label, storage path, uploaded_by,
-  legalisation status), `events` (audit log: who did what, when).
+### What the backend does
 
-GDPR points to settle before the first real case file: a privacy notice, a data processing agreement with each employer
-(Emismart as processor for the employer's HR data, controller for its own account data), retention periods (for
-example, delete documents 12 months after the case closes), and a record of processing. Special categories of data
-(health, criminal records) are processed only because the procedure requires them; this must be stated.
+- **Sign-in** by e-mail link, no passwords. Sessions are stored server-side and expire after 30 days.
+- **Organisations and roles.** An employer or law firm owns case files. On a case, members are employer, employee or
+  lawyer. Employees see only their own case and can upload only their own documents. Access checks are enforced in
+  the service layer (`lib/cases.ts`), not in the pages.
+- **Case files** with milestones generated from the country guide, document requests generated for both parties,
+  filing date and statutory decision deadline, lawyer review request, status, and a full audit log of who did what.
+- **Documents** are uploaded straight from the browser to the private bucket through a signed URL valid 10 minutes,
+  downloaded through a signed URL valid 2 minutes, limited to PDF and images up to 25 MB, with a review workflow
+  (requested, uploaded, verified, sent back). Every download is logged. Server-side encryption is the bucket's job:
+  enable it on the bucket (Supabase and R2 encrypt at rest by default).
+- **Workflows** (`lib/workflows`): events trigger handlers, for example creating a case generates milestones and
+  document requests, recording the filing date computes the deadline and notifies the parties, uploads notify the
+  reviewers, a review request escalates to the lawyer or to `REVIEW_EMAIL`. A daily cron sends deadline reminders.
+- **Rules engine** (`lib/rules`): a declarative, explainable evaluator. The eligibility questionnaire runs on it, and it
+  is exposed at `POST /api/rules/evaluate` for other systems (HR tools, intake forms). `GET /api/rules/evaluate` lists
+  the rules. Unit tests: `npm test`.
+
+### Local development
+
+`npm run dev` works with no configuration: an embedded Postgres under `.data/pglite` and files under `.data/uploads`.
+Sign-in links are shown on screen instead of being mailed. `npm run e2e:app` runs the whole dashboard flow against a
+production build.
+
+### Still to do before real case files
+
+- Virus scanning of uploads (for example a ClamAV service or the bucket provider's scanning) and optional
+  client-side encryption for the most sensitive documents.
+- Retention: a job that deletes documents a fixed period after a case closes, and the privacy notice that states it.
+- Rate limiting on the sign-in endpoint and two-factor sign-in for law firm accounts.
+- Multi-organisation collaboration (a law firm working on an employer's case through its own organisation rather than
+  as an invited member).
 
 ## 4. Costs, indicative
 

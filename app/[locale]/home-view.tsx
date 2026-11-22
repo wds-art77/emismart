@@ -3,7 +3,8 @@
 import { Link } from "@/components/link";
 import { Button, Card, Container, Eyebrow, H1, H2, Lead, Pill, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useT, useCountryName, useCountries } from "@/components/locale";
+import { useT, useCountryName } from "@/components/locale";
+import { useCountries } from "@/components/countries";
 import { euRecast, regions } from "@/lib/countries";
 
 export function HomeView() {

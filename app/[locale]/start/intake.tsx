@@ -7,7 +7,8 @@ import type { CountryCode } from "@/lib/countries";
 import { addPeriod } from "@/lib/deadlines";
 import { localizedDeadline, localizedNoDeadlineNote } from "@/lib/data/translations";
 import { Pill } from "@/components/ui";
-import { useLocale, useT, useCountryName, useCountries } from "@/components/locale";
+import { useLocale, useT, useCountryName } from "@/components/locale";
+import { useCountries } from "@/components/countries";
 import { fmt } from "@/lib/i18n";
 
 type MilestoneStatus = "todo" | "doing" | "done";

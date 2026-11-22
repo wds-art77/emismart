@@ -3,7 +3,8 @@
 import { Link } from "@/components/link";
 import { Container, Eyebrow, H1, Lead, Pill, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useT, useCountryName, useCountries } from "@/components/locale";
+import { useT, useCountryName } from "@/components/locale";
+import { useCountries } from "@/components/countries";
 import { regions } from "@/lib/countries";
 
 export function CountriesView() {

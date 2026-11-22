@@ -7,7 +7,8 @@ import type { CountryCode } from "@/lib/countries";
 import { emptyAnswers, evaluate, type Answers } from "@/lib/eligibility";
 import { fmt } from "@/lib/i18n";
 import { Pill } from "@/components/ui";
-import { useT, useCountryName, useCountries, useLocalizeCountry } from "@/components/locale";
+import { useT, useCountryName } from "@/components/locale";
+import { useCountries, useLocalizeCountry } from "@/components/countries";
 
 type Q = {
   key: keyof Answers;

@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { CountryCode } from "@/lib/countries";
 import { Pill } from "@/components/ui";
-import { useT, useCountryName, useCountries } from "@/components/locale";
+import { useT, useCountryName } from "@/components/locale";
+import { useCountries } from "@/components/countries";
 import { fmt } from "@/lib/i18n";
 
 type Party = "employer" | "employee";

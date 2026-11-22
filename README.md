@@ -46,10 +46,27 @@ Points that could not be confirmed on an official page are flagged in the text i
 All legal content is indicative, summarises publicly available official guidance and links to its sources. It is not
 legal advice. Fees and salary thresholds are deliberately not hard-coded because they change yearly.
 
+## Case management backend
+
+Employer dashboard, secure document management, automated workflows and a reusable rules engine are built in:
+
+- `lib/db`: Postgres schema (Drizzle), embedded Postgres for development, managed Postgres in production.
+- `lib/auth`: passwordless sign-in by e-mail link, server-side sessions.
+- `lib/cases`: case service with access control (organisation members and case members with roles).
+- `lib/storage`: direct-to-bucket uploads and downloads through signed URLs; local file store for development.
+- `lib/workflows`: event handlers (milestone and document generation, deadlines, notifications, escalation) and the
+  daily reminder job.
+- `lib/rules`: declarative rules engine with the eligibility ruleset, exposed at `/api/rules/evaluate`.
+- `app/[locale]/app`: the dashboard (cases, milestones, documents, parties, activity, notifications).
+
+Tests: `npm test` (rules engine), `npm run e2e` (public site), `npm run e2e:app` (dashboard flow). Setup and
+environment variables: see `DEPLOYMENT.md`.
+
 ## Stack
 
-Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS 4. No backend yet; the interactive tools use local storage
-only, so no personal data leaves the browser.
+Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS 4, Drizzle ORM on Postgres, S3-compatible storage, Resend
+for mail. The public tools (eligibility, checklist, local tracker) still work without an account and keep data in the
+browser.
 
 ## Run locally
 

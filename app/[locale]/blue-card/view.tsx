@@ -3,7 +3,8 @@
 import { Link } from "@/components/link";
 import { Container, Eyebrow, H1, H2, Lead, Pill, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useT, useCountryName, useCountries, useLocale } from "@/components/locale";
+import { useT, useCountryName, useLocale } from "@/components/locale";
+import { useCountries } from "@/components/countries";
 import { fmt } from "@/lib/i18n";
 import { regions } from "@/lib/countries";
 import { blueCard } from "@/lib/bluecard";

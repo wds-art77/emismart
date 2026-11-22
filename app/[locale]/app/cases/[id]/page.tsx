@@ -1,0 +1,223 @@
+import { notFound } from "next/navigation";
+import { requireUser } from "@/lib/auth";
+import { getCase } from "@/lib/cases";
+import { countryByCode } from "@/lib/countries";
+import { localizeCountry, localizedDeadline } from "@/lib/data/translations";
+import { dicts, fmt, isLocale } from "@/lib/i18n";
+import { Link } from "@/components/link";
+import { Pill } from "@/components/ui";
+import { UploadButton } from "@/components/upload-button";
+import { downloadAction, fileCaseAction, inviteAction, requestDocumentAction, requestReviewAction, reviewDocumentAction, setStatusAction, updateMilestoneAction } from "../../actions";
+
+export const dynamic = "force-dynamic";
+
+const statusTone = { draft: "grey", collecting: "navy", filed: "gold", decided: "green", closed: "grey" } as const;
+const docTone = { requested: "grey", uploaded: "gold", verified: "green", rejected: "navy" } as const;
+type Tab = "overview" | "milestones" | "documents" | "parties" | "activity";
+
+export default async function CasePage({ params, searchParams }: { params: Promise<{ locale: string; id: string }>; searchParams: Promise<{ tab?: string }> }) {
+  const { locale: l, id } = await params;
+  const locale = isLocale(l) ? l : "en";
+  const d = dicts[locale];
+  const a = d.app;
+  const user = await requireUser(locale, `/${locale}/app/cases/${id}`);
+  const data = await getCase(user.id, id);
+  if (!data) notFound();
+  const { case: c, access, milestones, documents, events, members, invitations, org } = data;
+  const raw = countryByCode(c.country);
+  const country = raw ? localizeCountry(raw, locale) : null;
+  const tab = ((await searchParams).tab ?? "overview") as Tab;
+  const canEdit = access.role !== "employee";
+  const done = milestones.filter((m) => m.status === "done").length;
+  const deadline = localizedDeadline(c.country as never, locale);
+  const input = "rounded-lg border border-navy-900/20 px-2 py-1 text-xs";
+  const btn = "rounded-full bg-navy-900 px-4 py-2 text-xs font-semibold text-white hover:bg-navy-800";
+  const btn2 = "rounded-full border border-navy-900/20 px-4 py-2 text-xs font-semibold text-navy-900 hover:border-navy-900/50";
+  const hidden = (extra: Record<string, string> = {}) => (
+    <>
+      <input type="hidden" name="locale" value={locale} />
+      <input type="hidden" name="caseId" value={c.id} />
+      {Object.entries(extra).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
+    </>
+  );
+
+  return (
+    <div>
+      <Link href="/app" className="text-sm text-navy-800/70 hover:text-navy-900">{a.backToCases}</Link>
+      <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-wider text-navy-800/60">{c.reference} · {org?.name}</p>
+          <h1 className="mt-1 text-3xl font-semibold">{country?.flag} {c.employeeName}</h1>
+          <p className="mt-1 text-sm text-navy-800/70">{country?.permitName}, {country?.name}{c.jobTitle ? ` · ${c.jobTitle}` : ""}</p>
+          <p className="mt-2 text-xs text-navy-800/60">{fmt(a.yourRole, { role: a.roles[access.role] })}</p>
+        </div>
+        <div className="text-right">
+          <Pill tone={statusTone[c.status]}>{a.status[c.status]}</Pill>
+          <p className="mt-2 text-2xl font-semibold">{milestones.length ? Math.round((done / milestones.length) * 100) : 0}%</p>
+          <p className="text-xs text-navy-800/60">{fmt(a.progress, { done, total: milestones.length })}</p>
+        </div>
+      </div>
+      {access.role === "employee" && <p className="mt-4 rounded-xl bg-navy-100 p-3 text-sm">{a.employeeHint}</p>}
+
+      <div className="mt-6 flex flex-wrap gap-2 border-b border-navy-900/10">
+        {(["overview", "milestones", "documents", "parties", "activity"] as Tab[]).map((t) => (
+          <Link key={t} href={`/app/cases/${c.id}?tab=${t}`} className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium ${tab === t ? "border-navy-900 text-navy-900" : "border-transparent text-navy-800/60 hover:text-navy-900"}`}>{a.tabs[t]}</Link>
+        ))}
+      </div>
+
+      {tab === "overview" && (
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
+          <div className="space-y-6">
+            <div className="rounded-2xl border border-gold-500/40 bg-gold-100/40 p-5">
+              <h2 className="font-semibold">{d.tracker.deadlineTitle}</h2>
+              {c.filedOn ? (
+                <p className="mt-2 text-sm">{a.filedOn}: <strong>{c.filedOn}</strong>{c.decisionDue && <> · {a.decisionDue}: <strong>{c.decisionDue}</strong></>}</p>
+              ) : canEdit ? (
+                <form action={fileCaseAction} className="mt-3 flex flex-wrap items-end gap-3">
+                  {hidden()}
+                  <label className="text-sm">{a.filedOn}<input type="date" name="filedOn" required className="mt-1 block rounded-xl border border-navy-900/20 px-3 py-2 text-sm" /></label>
+                  <button className={btn}>{a.markFiled}</button>
+                </form>
+              ) : null}
+              <p className="mt-3 text-xs text-navy-800/70">{deadline?.note ?? country?.decisionPeriod}</p>
+            </div>
+            <dl className="grid gap-3 text-sm sm:grid-cols-2">
+              {[[a.nationality, c.nationality], [a.jobTitle, c.jobTitle], [a.startDate, c.startDate], [d.tracker.fields.opened, new Date(c.createdAt).toLocaleDateString(locale)]].map(([k, v]) => (
+                <div key={k} className="rounded-xl bg-white p-4"><dt className="text-xs uppercase tracking-wider text-navy-800/60">{k}</dt><dd className="mt-1 font-medium">{v || "—"}</dd></div>
+              ))}
+            </dl>
+            {c.notes && canEdit && <p className="rounded-xl border border-navy-900/10 bg-white p-4 text-sm">{c.notes}</p>}
+          </div>
+          <div className="space-y-3">
+            {canEdit && (
+              <>
+                <form action={requestReviewAction}>{hidden()}<button className={`${btn} w-full bg-gold-500 text-navy-950 hover:bg-gold-600`}>{a.requestReview}</button></form>
+                {c.reviewRequestedAt && <p className="text-xs text-navy-800/70">{fmt(a.reviewRequested, { date: new Date(c.reviewRequestedAt).toLocaleDateString(locale) })}</p>}
+                <form action={setStatusAction}>{hidden({ status: c.status === "closed" ? "collecting" : "closed" })}<button className={`${btn2} w-full`}>{c.status === "closed" ? a.reopen : a.close}</button></form>
+              </>
+            )}
+            <Link href={`/countries/${c.country}`} className="block text-center text-sm font-semibold text-navy-900 underline-offset-4 hover:underline">{d.eligibility.result.guide}</Link>
+          </div>
+        </div>
+      )}
+
+      {tab === "milestones" && (
+        <ol className="mt-6 space-y-3">
+          {milestones.map((m, i) => {
+            const step = country?.steps[m.position];
+            return (
+              <li key={m.id} className="rounded-2xl border border-navy-900/10 bg-white p-4">
+                <form action={updateMilestoneAction} className="flex flex-wrap items-start justify-between gap-3">
+                  {hidden({ milestoneId: m.id })}
+                  <div className="flex gap-3">
+                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${m.status === "done" ? "bg-emerald-600 text-white" : "bg-navy-100 text-navy-900"}`}>{m.status === "done" ? "✓" : i + 1}</span>
+                    <div>
+                      <p className="font-medium">{step?.title ?? m.title}</p>
+                      <p className="text-xs text-navy-800/60">{m.actor}</p>
+                      <p className="mt-1 max-w-2xl text-sm text-navy-800/80">{step?.detail}</p>
+                    </div>
+                  </div>
+                  {canEdit ? (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <select name="status" defaultValue={m.status} className={input}>
+                        {(["todo", "doing", "done"] as const).map((s) => <option key={s} value={s}>{a.milestoneStatus[s]}</option>)}
+                      </select>
+                      <input type="date" name="date" defaultValue={m.date ?? ""} className={input} />
+                      <input name="note" defaultValue={m.note ?? ""} placeholder={d.tracker.notePlaceholder} className={`${input} w-56`} />
+                      <button className={btn}>{a.save}</button>
+                    </div>
+                  ) : (
+                    <Pill tone={m.status === "done" ? "green" : m.status === "doing" ? "gold" : "grey"}>{a.milestoneStatus[m.status]}</Pill>
+                  )}
+                </form>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+
+      {tab === "documents" && (
+        <div className="mt-6 space-y-8">
+          {(["employer", "employee"] as const).map((party) => {
+            const docs = documents.filter((x) => x.party === party);
+            const canUpload = canEdit || party === "employee";
+            return (
+              <section key={party}>
+                <h2 className="text-lg font-semibold">{a.docParty[party]}</h2>
+                <ul className="mt-3 divide-y divide-navy-900/10 rounded-2xl border border-navy-900/10 bg-white">
+                  {docs.map((doc) => (
+                    <li key={doc.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium">{doc.label}</p>
+                        {doc.note && <p className="text-xs text-navy-800/60">{doc.note}</p>}
+                        {doc.filename && <p className="mt-1 text-xs text-navy-800/70">{doc.filename} · {Math.round((doc.size ?? 0) / 1024)} KB · {doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleDateString(locale) : ""}</p>}
+                        {doc.reviewNote && doc.status === "rejected" && <p className="mt-1 text-xs text-red-700">{doc.reviewNote}</p>}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Pill tone={docTone[doc.status]}>{a.docStatus[doc.status]}</Pill>
+                        {doc.storageKey && (
+                          <form action={downloadAction}>{hidden({ documentId: doc.id })}<button className={btn2}>{a.download}</button></form>
+                        )}
+                        {canUpload && <UploadButton locale={locale} caseId={c.id} documentId={doc.id} label={doc.storageKey ? a.replace : a.upload} uploadingLabel={a.uploading} failedLabel={a.uploadFailed} />}
+                        {canEdit && doc.status === "uploaded" && (
+                          <form action={reviewDocumentAction} className="flex items-center gap-2">
+                            {hidden({ documentId: doc.id })}
+                            <input name="note" placeholder={a.reviewNote} className={`${input} w-40`} />
+                            <button name="status" value="verified" className={btn}>{a.verify}</button>
+                            <button name="status" value="rejected" className={btn2}>{a.reject}</button>
+                          </form>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                {canEdit && (
+                  <form action={requestDocumentAction} className="mt-3 flex flex-wrap items-center gap-2">
+                    {hidden({ party })}
+                    <input name="label" required placeholder={a.docLabel} className={`${input} w-64`} />
+                    <input name="note" placeholder={a.reviewNote} className={`${input} w-64`} />
+                    <button className={btn2}>{a.addDocument}</button>
+                  </form>
+                )}
+              </section>
+            );
+          })}
+          <p className="text-xs text-navy-800/60">{a.uploadHint}</p>
+        </div>
+      )}
+
+      {tab === "parties" && (
+        <div className="mt-6 max-w-2xl space-y-6">
+          <div className="rounded-2xl border border-navy-900/10 bg-white p-5">
+            <h2 className="font-semibold">{a.members}</h2>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li className="flex justify-between"><span>{org?.name}</span><Pill>{a.organisation}</Pill></li>
+              {members.map((m) => <li key={m.email} className="flex justify-between"><span>{m.name ?? m.email}</span><Pill tone="gold">{a.roles[m.role]}</Pill></li>)}
+              {invitations.map((i) => <li key={i.id} className="flex justify-between text-navy-800/60"><span>{i.email}</span><span className="text-xs">{a.roles[i.role]} · {a.invitePending}</span></li>)}
+            </ul>
+          </div>
+          {canEdit && (
+            <form action={inviteAction} className="flex flex-wrap items-end gap-3 rounded-2xl border border-navy-900/10 bg-white p-5">
+              {hidden()}
+              <label className="text-sm">{a.inviteEmail}<input name="email" type="email" required className="mt-1 block rounded-xl border border-navy-900/20 px-3 py-2 text-sm" /></label>
+              <label className="text-sm">{a.inviteRole}<select name="role" className="mt-1 block rounded-xl border border-navy-900/20 px-3 py-2 text-sm">{(["employee", "employer", "lawyer"] as const).map((r) => <option key={r} value={r}>{a.roles[r]}</option>)}</select></label>
+              <button className={btn}>{a.invite}</button>
+            </form>
+          )}
+        </div>
+      )}
+
+      {tab === "activity" && (
+        <ul className="mt-6 max-w-3xl space-y-2">
+          {events.length === 0 && <li className="text-sm text-navy-800/70">{a.noActivity}</li>}
+          {events.map(({ e, actorEmail }) => (
+            <li key={e.id} className="flex flex-wrap justify-between gap-2 rounded-xl border border-navy-900/10 bg-white px-4 py-3 text-sm">
+              <span><span className="font-medium">{(a.eventTypes as Record<string, string>)[e.type] ?? e.type}</span>{actorEmail && <span className="text-navy-800/60"> · {actorEmail}</span>}</span>
+              <span className="text-xs text-navy-800/60">{new Date(e.createdAt).toLocaleString(locale)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}

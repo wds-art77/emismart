@@ -52,6 +52,7 @@ export function Nav() {
             </Link>
           ))}
           <LanguageSwitcher />
+          <Link href="/app" className="whitespace-nowrap text-sm font-medium text-navy-900/70 hover:text-navy-700">{d.app.dashboard}</Link>
           <Link
             href="/eligibility"
             className="whitespace-nowrap rounded-full bg-navy-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-navy-800"
@@ -71,7 +72,7 @@ export function Nav() {
       {open && (
         <div className="border-t border-navy-900/10 bg-white xl:hidden">
           <Container className="flex flex-col gap-1 py-3">
-            {[...links, { href: "/blue-card", label: d.nav.blueCard }].map((l) => (
+            {[...links, { href: "/blue-card", label: d.nav.blueCard }, { href: "/app", label: d.app.dashboard }].map((l) => (
               <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-navy-900 hover:bg-navy-50">
                 {l.label}
               </Link>

@@ -3,9 +3,6 @@
 import { createContext, useContext, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { countryName, dicts, locales, type Dict, type Locale } from "@/lib/i18n";
-import { countries } from "@/lib/countries";
-import { localizeCountry } from "@/lib/data/translations";
-import type { Country } from "@/lib/types";
 
 type Ctx = { locale: Locale; d: Dict };
 const LocaleContext = createContext<Ctx>({ locale: "en", d: dicts.en });
@@ -14,20 +11,12 @@ export function LocaleProvider({ locale, children }: { locale: Locale; children:
   return <LocaleContext.Provider value={{ locale, d: dicts[locale] }}>{children}</LocaleContext.Provider>;
 }
 
+export function useLocaleCode(): Locale {
+  return useContext(LocaleContext).locale;
+}
+
 export function useT(): Dict {
   return useContext(LocaleContext).d;
-}
-
-/** All countries with their summary fields and names in the current locale, sorted by localized name. */
-export function useCountries(): Country[] {
-  const { locale } = useContext(LocaleContext);
-  return countries.map((c) => localizeCountry(c, locale)).sort((a, b) => a.name.localeCompare(b.name, locale));
-}
-
-/** Returns a function localizing one country object. */
-export function useLocalizeCountry() {
-  const { locale } = useContext(LocaleContext);
-  return (c: Country) => localizeCountry(c, locale);
 }
 
 /** Returns a function giving the localized name of a country object. */

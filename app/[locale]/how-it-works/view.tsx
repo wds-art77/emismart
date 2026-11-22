@@ -2,7 +2,8 @@
 
 import { Button, Card, Container, Eyebrow, H1, H2, Lead, Section } from "@/components/ui";
 import { Disclaimer } from "@/components/disclaimer";
-import { useT, useCountryName, useCountries } from "@/components/locale";
+import { useT, useCountryName } from "@/components/locale";
+import { useCountries } from "@/components/countries";
 
 export function HowItWorksView() {
   const d = useT();
