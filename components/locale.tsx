@@ -38,7 +38,7 @@ export function useLocale() {
   return { locale, setLocale };
 }
 
-export function LanguageSwitcher({ dark = false, className = "" }: { dark?: boolean; className?: string }) {
+export function LanguageSwitcher({ dark = false, compact = false, className = "" }: { dark?: boolean; compact?: boolean; className?: string }) {
   const { locale, setLocale } = useLocale();
   const d = useT();
   return (
@@ -54,7 +54,7 @@ export function LanguageSwitcher({ dark = false, className = "" }: { dark?: bool
       >
         {locales.map((l) => (
           <option key={l} value={l} className="text-navy-900">
-            {dicts[l].meta.name}
+            {compact ? l.toUpperCase() : dicts[l].meta.name}
           </option>
         ))}
       </select>

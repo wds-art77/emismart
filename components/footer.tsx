@@ -12,7 +12,7 @@ export function Footer() {
     <footer className="border-t border-navy-900/10 bg-navy-950 text-white">
       <Container className="grid gap-10 py-14 md:grid-cols-4">
         <div className="md:col-span-1">
-          <Logo dark height={40} />
+          <Logo dark height={40} className="h-10 w-auto" />
           <p className="mt-4 text-sm leading-relaxed text-white/70">{d.footer.tagline}</p>
         </div>
         <div>

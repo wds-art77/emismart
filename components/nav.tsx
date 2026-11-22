@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Container } from "./ui";
 import { LanguageSwitcher, useLocale, useT } from "./locale";
 
-export function Logo({ dark = false, height = 36 }: { dark?: boolean; height?: number }) {
+export function Logo({ dark = false, height = 36, className = "" }: { dark?: boolean; height?: number; className?: string }) {
   const width = Math.round(height * (1198 / 198));
   return (
     <Link href="/" className="flex shrink-0 items-center" aria-label="Emismart home">
@@ -17,7 +17,7 @@ export function Logo({ dark = false, height = 36 }: { dark?: boolean; height?: n
         width={width}
         height={height}
         priority
-        style={{ height, width: "auto" }}
+        className={className || "h-9 w-auto"}
       />
     </Link>
   );
@@ -37,8 +37,8 @@ export function Nav() {
   ];
   return (
     <nav className="sticky top-0 z-40 border-b border-navy-900/10 bg-white/90 backdrop-blur">
-      <Container className="flex h-16 items-center justify-between gap-6">
-        <Logo />
+      <Container className="flex h-16 items-center justify-between gap-4">
+        <Logo className="h-7 w-auto sm:h-9" />
         <div className="hidden items-center gap-5 xl:flex">
           {links.map((l) => (
             <Link
@@ -59,9 +59,9 @@ export function Nav() {
             {d.nav.checkEligibility}
           </Link>
         </div>
-        <div className="flex items-center gap-2 xl:hidden">
-          <LanguageSwitcher />
-          <button className="rounded-md p-2 text-navy-900" aria-label={d.nav.menu} aria-expanded={open} onClick={() => setOpen(!open)}>
+        <div className="flex shrink-0 items-center gap-2 xl:hidden">
+          <LanguageSwitcher compact />
+          <button className="shrink-0 rounded-md p-2 text-navy-900" aria-label={d.nav.menu} aria-expanded={open} onClick={() => setOpen(!open)}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
             </svg>
