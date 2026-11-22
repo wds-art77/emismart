@@ -33,10 +33,10 @@ Points that could not be confirmed on an official page are flagged in the text i
 - Interface in English, French, Dutch and German (`lib/i18n/*.ts`) on locale-prefixed routes (`/en`, `/fr`, `/nl`,
   `/de`), server-rendered, with localized titles, canonical and hreflang links and a four-language sitemap. A middleware
   redirects bare URLs to the visitor's saved choice (cookie) or browser language. The English dictionary defines the
-  type, so the compiler guarantees the other three are complete. The summary layer of every country guide (tagline,
-  overview, who files, decision period, validity, labour market test), the deadline notes and the Blue Card points are
-  translated too (`lib/data/translations/*.ts`). Steps, documents, alternative routes and watch-outs stay in English
-  pending legal review; a note says so in the other languages.
+  type, so the compiler guarantees the other three are complete. All 27 country guides are fully translated as well:
+  the summary layer, permit names, deadline notes and Blue Card points (`lib/data/translations/*.ts`) and the detailed
+  sections, one file per country and language (`lib/data/translations/{fr,nl,de}/<code>.ts`). The translations keep the
+  exact number and order of steps and documents, which the tracker relies on.
 - EU Blue Card page (`/blue-card`): the common rules of Directive (EU) 2021/1883 and each country's positioning of the
   Blue Card, drawn from the country data.
 - "Request lawyer review" in the tracker: builds a summary of the case and opens the mail client; the recipient address
@@ -77,7 +77,7 @@ npm run e2e
 3. Server-side status tracking with e-mail reminders, building on the local tracker and deadline data.
 4. Payments for Emismart services; government fees displayed separately and never marked up.
 5. Lawyer review queue for flagged cases, refusals and appeals.
-6. Translation of the country guides after legal review of each one.
+6. Legal review of the translated guides alongside the English originals.
 7. Content operations: a review calendar tied to official publications (regional shortage lists, IND fees, French
    arrêtés, German BeschV changes, Luxembourg legislation).
 8. Extension to further routes (EU Blue Card, ICT, family reunification, renewals) and to EEA states and Switzerland.
