@@ -33,8 +33,10 @@ Points that could not be confirmed on an official page are flagged in the text i
 - Interface in English, French, Dutch and German (`lib/i18n/*.ts`) on locale-prefixed routes (`/en`, `/fr`, `/nl`,
   `/de`), server-rendered, with localized titles, canonical and hreflang links and a four-language sitemap. A middleware
   redirects bare URLs to the visitor's saved choice (cookie) or browser language. The English dictionary defines the
-  type, so the compiler guarantees the other three are complete. Country guide content stays in English pending legal
-  review; a note says so in the other languages.
+  type, so the compiler guarantees the other three are complete. The summary layer of every country guide (tagline,
+  overview, who files, decision period, validity, labour market test), the deadline notes and the Blue Card points are
+  translated too (`lib/data/translations/*.ts`). Steps, documents, alternative routes and watch-outs stay in English
+  pending legal review; a note says so in the other languages.
 - EU Blue Card page (`/blue-card`): the common rules of Directive (EU) 2021/1883 and each country's positioning of the
   Blue Card, drawn from the country data.
 - "Request lawyer review" in the tracker: builds a summary of the case and opens the mail client; the recipient address
