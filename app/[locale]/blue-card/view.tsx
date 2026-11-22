@@ -8,7 +8,7 @@ import { fmt } from "@/lib/i18n";
 import { countries, countriesByRegion, regions } from "@/lib/countries";
 import { blueCard } from "@/lib/bluecard";
 
-const blueRouteOf = (code: string) => countries.find((c) => c.code === code)?.alternativeRoutes.find((r) => /blue card|blaue karte|carte bleue/i.test(r.name));
+const blueRouteOf = (code: string) => countries.find((c) => c.code === code)?.alternativeRoutes.find((r) => /blue card|blaue karte|carte bleue/i.test(r.name)) ?? countries.find((c) => c.code === code)?.alternativeRoutes.find((r) => /blue card|carte bleue/i.test(r.summary));
 
 export function BlueCardView() {
   const d = useT();
