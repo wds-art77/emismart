@@ -4,7 +4,7 @@ import { countries, countryByCode } from "@/lib/countries";
 import { CountryGuide } from "./guide";
 import { alternates, OG_IMAGE } from "@/lib/seo";
 import { countryName, isLocale } from "@/lib/i18n";
-import { localizeCountry } from "@/lib/data/translations";
+import { hasDetails, localizeCountry } from "@/lib/data/translations";
 
 type Params = { code: string };
 
@@ -26,5 +26,6 @@ export default async function CountryPage({ params }: { params: Promise<Params &
   const { code, locale } = await params;
   const c = countryByCode(code);
   if (!c) notFound();
-  return <CountryGuide c={localizeCountry(c, isLocale(locale) ? locale : "en")} />;
+  const loc = isLocale(locale) ? locale : "en";
+  return <CountryGuide c={localizeCountry(c, loc)} partial={!hasDetails(loc)} />;
 }

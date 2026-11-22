@@ -7,9 +7,15 @@ import { fr } from "./fr";
 import { nl } from "./nl";
 import { de } from "./de";
 import { permitNames } from "./permits";
+import { details as frDetails } from "./fr/index";
 
 const translations: Partial<Record<Locale, CountryTranslations>> = { fr, nl, de };
 const detailSets: Partial<Record<Locale, Record<CountryCode, CountryDetails>>> = {};
+registerDetailsInit();
+function registerDetailsInit() {
+  detailSets.fr = frDetails;
+}
+
 export function registerDetails(locale: Locale, d: Record<CountryCode, CountryDetails>) {
   detailSets[locale] = d;
 }
@@ -36,4 +42,8 @@ export function localizedNoDeadlineNote(code: CountryCode, locale: Locale): stri
 
 export function localizedBlueCardPoints(locale: Locale): string[] {
   return translations[locale]?.blueCardPoints ?? blueCard.points;
+}
+
+export function hasDetails(locale: Locale): boolean {
+  return locale === "en" || !!detailSets[locale];
 }

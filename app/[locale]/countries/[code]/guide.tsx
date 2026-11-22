@@ -14,7 +14,7 @@ const actorTone: Record<string, "navy" | "gold" | "green" | "grey"> = {
   Both: "green",
 };
 
-export function CountryGuide({ c }: { c: Country }) {
+export function CountryGuide({ c, partial = false }: { c: Country; partial?: boolean }) {
   const d = useT();
   const cn = useCountryName();
   const { locale } = useLocale();
@@ -35,7 +35,7 @@ export function CountryGuide({ c }: { c: Country }) {
             </div>
           </div>
           <p className="mt-3 text-lg text-navy-800/70">{c.localName}</p>
-          {locale !== "en" && (
+          {locale !== "en" && partial && (
             <p className="mt-4 inline-block rounded-lg bg-navy-100 px-3 py-2 text-xs text-navy-900">{g.contentNote}</p>
           )}
           <Lead>{c.overview}</Lead>
