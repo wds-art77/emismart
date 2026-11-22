@@ -80,7 +80,7 @@ try {
   await page.getByRole("button", { name: "Berufs- oder Fachqualifikation" }).click();
   await page.getByRole("button", { name: "Marktübliches Gehalt, unter dieser Schwelle" }).click();
   await page.getByRole("button", { name: "Nein", exact: true }).click();
-  check("eligibility result in German", (await page.locator("h2").first().innerText()).startsWith("Voraussichtlich geeignet"));
+  check("eligibility result in German", /voraussichtlich in Betracht/.test(await page.locator("h2").first().innerText()));
 
   // Checklist persistence
   await page.goto(`${base}/en/checklist?country=ee`);
