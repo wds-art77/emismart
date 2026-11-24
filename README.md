@@ -56,7 +56,14 @@ Employer dashboard, secure document management, automated workflows and a reusab
 - `lib/storage`: direct-to-bucket uploads and downloads through signed URLs; local file store for development.
 - `lib/workflows`: event handlers (milestone and document generation, deadlines, notifications, escalation) and the
   daily reminder job.
-- `lib/rules`: declarative rules engine with the eligibility ruleset, exposed at `/api/rules/evaluate`.
+- `lib/rules`: declarative rules engine with the eligibility ruleset (`/api/rules/evaluate`), plus structured
+  country rules for all 27 member states (`lib/rules/countries/<code>.ts`): salary thresholds, shortage lists,
+  family reunification, Directive (EU) 2024/1233 timelines and document requirements, every figure versioned with
+  its validity date, official source and last-verified date. Decision trees are generated from this data
+  (`/countries/<code>/rules`, `/api/rules/countries/<code>`). Unknown figures are null, never estimated.
+- `lib/documents`: document types, legalisation regimes (EU public documents regulation, Hague apostille, consular
+  legalisation) and validation checks (passport validity buffer, criminal record age, apostille, translation).
+- `lib/pdf`, `lib/forms`: pre-filled application dossier and audit trail PDFs; registry for official form mappings.
 - `app/[locale]/app`: the dashboard (cases, milestones, documents, parties, activity, notifications).
 
 Tests: `npm test` (rules engine), `npm run e2e` (public site), `npm run e2e:app` (dashboard flow). Setup and
@@ -100,6 +107,17 @@ npm run e2e
 8. Extension to further routes (EU Blue Card, ICT, family reunification, renewals) and to EEA states and Switzerland.
 9. Legal review pass on the 22 countries added after the initial five, with particular attention to the items flagged
    as unconfirmed in each file (see "Known gaps" below).
+
+## Structured rules: review status
+
+The 27 rule files were researched from official pages on 23 and 24 November 2026. Coverage at that date: Blue Card
+threshold amount found on an official page for 13 countries, statutory minimum wage for 15, transposition status of
+the recast directive for 23. Every missing figure is explained in the file's `reviewNotes`, shown on the country's
+rules page under "Notes for the legal reviewer". Recurring reasons: the authority publishes a multiplier (for example
+1.5 times the average wage) without the resulting amount; the official site refused automated access (Migri, Legifrance,
+dofi.ibz.be, e-seimas, RIS); or transposition status rests on press coverage of the Commission's July 2026 infringement
+package. These files are the first place for a lawyer's review; a corrected figure is a one-line change with a new
+`validFrom`.
 
 ## Known gaps flagged during research
 

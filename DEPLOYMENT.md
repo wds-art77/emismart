@@ -79,6 +79,16 @@ use from `lib/db/migrations`.
 Sign-in links are shown on screen instead of being mailed. `npm run e2e:app` runs the whole dashboard flow against a
 production build.
 
+### Added in the second backend phase
+
+- Structured rules per country with versioned figures and decision trees, served at `/countries/<code>/rules` and
+  `/api/rules/countries/<code>` (the API accepts facts such as `grossAnnualSalary` and walks the tree).
+- Document validation on upload and on saving a document's details: passport validity buffer, criminal record age,
+  apostille or legalisation regime by issuing state, translation requirement. Results appear as checks on each
+  document and as a readiness summary on the case.
+- Case discussion between the parties, "next actions" per party, counsel organisations (a lawyer who joins a case
+  brings their firm), and PDF exports: pre-filled application dossier and audit trail.
+
 ### Still to do before real case files
 
 - Virus scanning of uploads (for example a ClamAV service or the bucket provider's scanning) and optional
