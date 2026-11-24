@@ -1,6 +1,8 @@
 import { evaluateRules, type Rule } from "./engine";
 import { countries, type CountryCode } from "../countries";
 import { deadlines } from "../deadlines";
+import { current, yearly } from "./country-rules";
+import { getCountryRules } from "./registry";
 
 // Work-permit eligibility ruleset. Facts come from the questionnaire or from an API caller.
 // Outcomes reference text keys in the interface dictionaries (lib/i18n) so that the same rule
@@ -14,6 +16,8 @@ export type EligibilityFacts = {
   contract?: "cdi" | "cdd";
   qualification?: "degree" | "vocational" | "experience" | "none";
   salary?: "high" | "standard" | "unknown";
+  /** Gross annual salary in the country's currency; when given with a researched country, it replaces the salary answer. */
+  grossAnnualSalary?: number;
   shortage?: "yes" | "no" | "unknown";
 };
 
@@ -113,12 +117,28 @@ export const eligibilityRules: Rule<EligibilityOutcome>[] = [
 
 export type EligibilityResult = EligibilityOutcome & {
   fired: string[];
+  /** Threshold comparison when a numeric salary and structured rules were available. */
+  salaryAssessment?: { grossAnnualSalary: number; currency: string; blueCard?: number; highlyQualified?: number; meets: "blueCard" | "highlyQualified" | "none" };
   country?: { code: CountryCode; name: string; permitName: string; singlePermitDirective: boolean; decisionPeriod: string; deadline: { label: string; months?: number; days?: number } | null };
   requiredDocuments?: { employer: string[]; employee: string[] };
 };
 
 /** Evaluate the ruleset and merge collected outcomes into one result. */
-export function evaluateEligibility(facts: EligibilityFacts): EligibilityResult {
+export function evaluateEligibility(input: EligibilityFacts): EligibilityResult {
+  const facts: EligibilityFacts = { ...input };
+  let salaryAssessment: EligibilityResult["salaryAssessment"];
+  if (typeof facts.grossAnnualSalary === "number" && facts.country) {
+    const rules = getCountryRules(facts.country);
+    const blue = current(rules?.salary.blueCard ?? null);
+    const hq = current(rules?.salary.highlyQualified ?? null);
+    if (blue || hq) {
+      const b = blue ? yearly(blue.value) : undefined;
+      const h = hq ? yearly(hq.value) : undefined;
+      const meets = b !== undefined && facts.grossAnnualSalary >= b ? "blueCard" : h !== undefined && facts.grossAnnualSalary >= h ? "highlyQualified" : "none";
+      salaryAssessment = { grossAnnualSalary: facts.grossAnnualSalary, currency: (blue ?? hq)!.value.currency, blueCard: b, highlyQualified: h, meets };
+      facts.salary = meets === "none" ? "standard" : "high";
+    }
+  }
   const ev = evaluateRules(eligibilityRules, facts as Record<string, unknown>);
   const [first, ...rest] = ev.outcomes;
   if (!first) {
@@ -131,7 +151,7 @@ export function evaluateEligibility(facts: EligibilityFacts): EligibilityResult 
     if (!merged.labourMarketTest && o.labourMarketTest) merged.labourMarketTest = o.labourMarketTest;
   }
   const c = facts.country ? countries.find((x) => x.code === facts.country) : undefined;
-  const result: EligibilityResult = { ...merged, fired: ev.fired };
+  const result: EligibilityResult = { ...merged, fired: ev.fired, ...(salaryAssessment ? { salaryAssessment } : {}) };
   if (c) {
     const dl = deadlines[c.code];
     result.country = { code: c.code, name: c.name, permitName: c.permitName, singlePermitDirective: c.singlePermitDirective, decisionPeriod: c.decisionPeriod, deadline: dl ? { label: dl.label, months: dl.months, days: dl.days } : null };

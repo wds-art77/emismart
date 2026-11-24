@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { evaluateEligibility, eligibilityRules } from "@/lib/rules/eligibility";
+import "@/lib/rules/countries";
 
 // Public rules API. POST facts, receive the route, confidence, explanation (fired rule ids),
 // the country's decision deadline and the required documents.
@@ -15,6 +16,7 @@ const Facts = z.object({
   contract: z.enum(["cdi", "cdd"]).optional(),
   qualification: z.enum(["degree", "vocational", "experience", "none"]).optional(),
   salary: z.enum(["high", "standard", "unknown"]).optional(),
+  grossAnnualSalary: z.number().positive().optional(),
   shortage: z.enum(["yes", "no", "unknown"]).optional(),
 });
 

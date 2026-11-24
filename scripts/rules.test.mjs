@@ -76,3 +76,39 @@ test("every rule id is unique", () => {
   const ids = eligibilityRules.map((r) => r.id);
   assert.equal(new Set(ids).size, ids.length);
 });
+
+test("numeric salary against a registered threshold overrides the salary answer", () => {
+  const { registerRules } = require(path.resolve("lib/rules/registry.ts"));
+  registerRules({ code: "xx", salary: { blueCard: [{ value: { amount: 60000, currency: "EUR", period: "year", gross: true }, validFrom: "2026-01-01", source: { label: "t", url: "https://example.org" }, lastVerified: "2026-01-01" }], blueCardReduced: null, highlyQualified: null, minimumWage: null }, shortage: { list: null, exemptsLabourMarketTest: null }, family: { waitingPeriodMonths: null, blueCardImmediate: null, decisionDays: null, conditions: null, source: null }, recast: { transposition: null, decisionDays: null, extensionDays: null, changeOfEmployerByNotification: null, unemploymentGraceMonths: null, inCountryApplication: null }, documents: { passportValidityBeyondStayMonths: null, acceptedLanguages: [], swornTranslationRequired: null, criminalRecordMaxAgeMonths: null, source: null }, validity: null, reviewNotes: [] });
+  const high = evaluateEligibility({ nationality: "third", country: "xx", offer: "yes", qualification: "degree", salary: "unknown", grossAnnualSalary: 65000 });
+  assert.equal(high.routeId, "highly-qualified");
+  assert.equal(high.salaryAssessment.meets, "blueCard");
+  const low = evaluateEligibility({ nationality: "third", country: "xx", offer: "yes", qualification: "degree", salary: "high", grossAnnualSalary: 40000, shortage: "no" });
+  assert.equal(low.routeId, "single-permit");
+  assert.equal(low.salaryAssessment.meets, "none");
+});
+
+test("document validation: passport buffer, apostille regime, translation", () => {
+  const { validateDocument } = require(path.resolve("lib/documents/validate.ts"));
+  const ctx = { destination: "BE", intendedStart: "2027-01-01", acceptedLanguages: ["fr", "nl", "de"], rules: null, today: new Date("2026-11-24") };
+  const expired = validateDocument("Valid passport", { expiryDate: "2026-06-01", issuingCountry: "NG", documentNumber: "A1", issueDate: "2016-06-01" }, ctx, true);
+  assert.ok(expired.some((c) => c.code === "passport_expired" && c.level === "fail"));
+  const record = validateDocument("Extract from the criminal record, legalised", { issuingCountry: "IN", issueDate: "2026-10-01", language: "en" }, ctx, true);
+  assert.ok(record.some((c) => c.code === "apostille_needed"), "India is an Apostille Convention party");
+  assert.ok(record.some((c) => c.code === "translation_needed"));
+  const eu = validateDocument("Birth certificate", { issuingCountry: "FR", issueDate: "2026-10-01", language: "fr", legalised: "none", translated: "none" }, ctx, true);
+  assert.ok(eu.some((c) => c.code === "legalisation_not_needed") && eu.some((c) => c.code === "language_ok"));
+  const unknown = validateDocument("Diploma", { issuingCountry: "ZZ", issueDate: "2020-01-01", language: "fr" }, ctx, true);
+  assert.ok(unknown.some((c) => c.code === "legalisation_unknown"));
+});
+
+test("decision tree walks to a leaf and stops at missing facts", () => {
+  const { buildTree, walk } = require(path.resolve("lib/rules/decision-tree.ts"));
+  const { tree } = buildTree("be");
+  assert.equal(walk(tree, { nationality: "eu" }).leaf.id, "free-movement");
+  assert.equal(walk(tree, { nationality: "third", offer: false }).leaf.id, "no-offer");
+  const pending = walk(tree, { nationality: "third", offer: true });
+  assert.equal(pending.pending.id, "shortage");
+  const r = walk(tree, { nationality: "third", offer: true, shortageOccupation: false, degree: false });
+  assert.equal(r.leaf.id, "single-permit");
+});

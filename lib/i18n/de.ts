@@ -150,6 +150,7 @@ export const de: Dict = {
       experience: "Vor allem Berufserfahrung, kein formaler Abschluss",
       none: "Nichts davon",
       salary: "Wie verhält sich das Bruttogehalt zur nationalen Schwelle für Hochqualifizierte?",
+      salaryAmount: "Optional: Bruttojahresgehalt in Landeswährung, zum Vergleich mit den amtlichen Schwellen",
       salaryHelp: "Die Schwellen unterscheiden sich nach Land und Jahr. Wählen Sie „darüber“ nur, wenn der Arbeitgeber dies bestätigt hat.",
       salaryHigh: "Über der Schwelle für Hochqualifizierte oder für die Blaue Karte",
       salaryStandard: "Marktübliches Gehalt, unter dieser Schwelle",
@@ -169,6 +170,11 @@ export const de: Dict = {
       startOver: "Von vorn beginnen",
     },
     outcomes: {
+      salaryAssessment: {
+        blueCard: "Das Gehalt von {salary} {currency} liegt auf oder über der Schwelle der Blauen Karte EU von {blueCard} {currency}.",
+        highlyQualified: "Das Gehalt von {salary} {currency} liegt unter der Schwelle der Blauen Karte ({blueCard} {currency}), aber auf oder über der nationalen Schwelle für Hochqualifizierte von {highlyQualified} {currency}.",
+        none: "Das Gehalt von {salary} {currency} liegt unter den Schwellen (Blaue Karte: {blueCard} {currency}).",
+      },
       eu: {
         headline: "Keine Erlaubnis erforderlich",
         route: "Freizügigkeit für Staatsangehörige der EU, des EWR und der Schweiz",

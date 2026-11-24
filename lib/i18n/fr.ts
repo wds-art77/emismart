@@ -150,6 +150,7 @@ export const fr: Dict = {
       experience: "Surtout de l'expérience professionnelle, sans diplôme formel",
       none: "Aucune de ces réponses",
       salary: "Comment le salaire brut se situe-t-il par rapport au seuil national pour travailleurs hautement qualifiés ?",
+      salaryAmount: "Facultatif : salaire brut annuel en monnaie locale, pour comparaison avec les seuils officiels",
       salaryHelp: "Les seuils varient selon le pays et l'année. Choisissez « au-dessus » uniquement si l'employeur l'a confirmé.",
       salaryHigh: "Au-dessus du seuil pour travailleurs hautement qualifiés ou du seuil carte bleue",
       salaryStandard: "Salaire du marché, sous ce seuil",
@@ -169,6 +170,11 @@ export const fr: Dict = {
       startOver: "Recommencer",
     },
     outcomes: {
+      salaryAssessment: {
+        blueCard: "Le salaire de {salary} {currency} atteint ou dépasse le seuil de la carte bleue européenne de {blueCard} {currency}.",
+        highlyQualified: "Le salaire de {salary} {currency} est sous le seuil de la carte bleue ({blueCard} {currency}) mais atteint le seuil national hautement qualifié de {highlyQualified} {currency}.",
+        none: "Le salaire de {salary} {currency} est sous les seuils (carte bleue : {blueCard} {currency}).",
+      },
       eu: {
         headline: "Aucun permis nécessaire",
         route: "Libre circulation des citoyens de l'UE, de l'EEE et de la Suisse",

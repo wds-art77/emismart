@@ -148,6 +148,7 @@ export const en = {
       experience: "Mainly professional experience, no formal diploma",
       none: "None of the above",
       salary: "How does the gross salary compare with the national highly qualified threshold?",
+      salaryAmount: "Optional: gross annual salary in the local currency, to compare with the official thresholds",
       salaryHelp: "Thresholds differ by country and year. Choose 'above' only if the employer has confirmed it.",
       salaryHigh: "Above the highly qualified or Blue Card threshold",
       salaryStandard: "Market salary, below that threshold",
@@ -167,6 +168,11 @@ export const en = {
       startOver: "Start over",
     },
     outcomes: {
+      salaryAssessment: {
+        blueCard: "Salary of {salary} {currency} is at or above the EU Blue Card threshold of {blueCard} {currency}.",
+        highlyQualified: "Salary of {salary} {currency} is below the Blue Card threshold ({blueCard} {currency}) but at or above the national highly qualified threshold of {highlyQualified} {currency}.",
+        none: "Salary of {salary} {currency} is below the thresholds (Blue Card {blueCard} {currency}).",
+      },
       eu: {
         headline: "No permit needed",
         route: "Free movement of EU, EEA and Swiss citizens",

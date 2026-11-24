@@ -91,6 +91,43 @@ try {
   const bytes = readFileSync(await download.path());
   check("download returns the uploaded bytes", bytes.toString().startsWith("%PDF-1.4"));
 
+  // Document details and validation checks
+  const details = employeeSection.locator("details").first();
+  await details.locator("summary").click();
+  await details.locator("select[name=issuingCountry]").selectOption("NG");
+  await details.locator("input[name=documentNumber]").fill("A1234567");
+  await details.locator("input[name=issueDate]").fill("2020-01-01");
+  await details.locator("input[name=expiryDate]").fill("2027-02-01");
+  await Promise.all([page.waitForResponse((r) => r.request().method() === "POST"), details.getByRole("button", { name: "Save details" }).click()]);
+  await page.waitForLoadState("networkidle");
+  await page.reload();
+  const checksText = await employeeSection.locator("li").first().innerText();
+  check("validation checks run on the passport details", /Passport expires on 2027-02-01|Passport validity sufficient|Passport expired/.test(checksText), checksText.slice(0, 120));
+  await page.goto(`${caseUrl}?tab=overview`);
+  check("readiness summary shown", (await page.locator("text=Document readiness").count()) === 1 && (await page.locator("text=Next actions").count()) === 1);
+
+  // Discussion
+  await page.goto(`${caseUrl}?tab=discussion`);
+  await page.fill("#body", "Please check the salary threshold before filing.");
+  await page.getByRole("button", { name: "Post" }).click();
+  await page.waitForSelector("text=Please check the salary threshold");
+  check("comment posted", true);
+
+  // PDF exports
+  const cookie = (await ctx.cookies()).find((k) => k.name === "emismart_session");
+  const caseId = caseUrl.split("/cases/")[1].split("?")[0];
+  for (const kind of ["dossier", "audit"]) {
+    const r = await fetch(`${base}/api/cases/${caseId}/${kind}?locale=en`, { headers: { cookie: `emismart_session=${cookie.value}` } });
+    const buf = Buffer.from(await r.arrayBuffer());
+    check(`${kind} PDF generated`, r.status === 200 && buf.subarray(0, 5).toString() === "%PDF-", `${r.status} ${buf.length} bytes`);
+  }
+  const anon = await fetch(`${base}/api/cases/${caseId}/dossier`);
+  check("PDF export requires sign-in", anon.status === 401);
+
+  // Rules API for a country
+  const tree = await (await fetch(`${base}/api/rules/countries/be?nationality=third&offer=true&shortageOccupation=false&degree=true&grossAnnualSalary=70000`)).json();
+  check("country rules API walks the decision tree", tree.tree?.kind === "question" && Array.isArray(tree.result?.path) && tree.result.path.includes("salary"));
+
   // Filing and deadline
   await page.goto(`${caseUrl}?tab=overview`);
   await page.fill("input[name=filedOn]", "2026-10-01");
@@ -128,7 +165,7 @@ try {
   // Activity and notifications
   await page.goto(`${caseUrl}?tab=activity`);
   const activity = await page.locator("ul li").allInnerTexts();
-  check("activity log records the chain of events", ["Case file opened", "Milestone updated", "Document uploaded", "Document reviewed", "Application filed", "Lawyer review requested", "Member invited", "Member joined"].every((t) => activity.some((a) => a.includes(t))));
+  check("activity log records the chain of events", ["Case file opened", "Milestone updated", "Document uploaded", "Document details updated", "Message posted", "Document reviewed", "Application filed", "Lawyer review requested", "Member invited", "Member joined"].every((t) => activity.some((a) => a.includes(t))));
   await page.goto(`${base}/en/app/notifications`);
   check("employee upload did not notify the uploader; employer sees filing notice for others only", (await page.locator("text=No notifications").count()) === 1 || (await page.locator("li").count()) >= 0);
 

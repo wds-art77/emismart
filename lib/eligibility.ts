@@ -1,6 +1,8 @@
 import { countryByCode, type CountryCode } from "./countries";
 import type { Country } from "./types";
 import { fmt, type Dict } from "./i18n";
+import { evaluateEligibility } from "./rules/eligibility";
+import "./rules/countries";
 
 export type Answers = {
   nationality: "eu" | "third" | "";
@@ -32,11 +34,12 @@ export type Outcome = {
   nextSteps: string[];
   alternatives: string[];
   reviewRecommended: boolean;
+  salaryNote?: string;
 };
 
 type O = Dict["eligibility"]["outcomes"];
 
-export function evaluate(a: Answers, o: O, name: (c: { code: string; name: string }) => string = (c) => c.name, localize: (c: Country) => Country = (c) => c): Outcome {
+function evaluateInner(a: Answers, o: O, name: (c: { code: string; name: string }) => string = (c) => c.name, localize: (c: Country) => Country = (c) => c): Outcome {
   if (a.nationality === "eu") {
     return { headline: o.eu.headline, route: o.eu.route, confidence: "high", summary: o.eu.summary, nextSteps: [...o.eu.next], alternatives: [...o.eu.alt], reviewRecommended: false };
   }
@@ -81,4 +84,19 @@ export function evaluate(a: Answers, o: O, name: (c: { code: string; name: strin
     alternatives: [...o.single.alt],
     reviewRecommended: a.location === "inside" || a.qualification === "experience",
   };
+}
+
+export function evaluate(a: Answers, o: O, name?: (c: { code: string; name: string }) => string, localize?: (c: Country) => Country, grossAnnualSalary?: number): Outcome {
+  // When a numeric salary is given and the country has structured thresholds, the engine decides the salary band.
+  let salaryNote: string | undefined;
+  if (grossAnnualSalary && a.country) {
+    const r = evaluateEligibility({ nationality: a.nationality || "third", country: a.country, offer: a.offer || undefined, location: a.location || undefined, contract: a.contract || undefined, qualification: a.qualification || undefined, salary: a.salary || undefined, shortage: a.shortage || undefined, grossAnnualSalary });
+    if (r.salaryAssessment) {
+      a = { ...a, salary: r.salaryAssessment.meets === "none" ? "standard" : "high" };
+      const sa = r.salaryAssessment;
+      salaryNote = fmt(o.salaryAssessment[sa.meets], { salary: sa.grossAnnualSalary.toLocaleString(), currency: sa.currency, blueCard: (sa.blueCard ?? 0).toLocaleString(), highlyQualified: (sa.highlyQualified ?? 0).toLocaleString() });
+    }
+  }
+  const out = evaluateInner(a, o, name, localize);
+  return salaryNote ? { ...out, salaryNote } : out;
 }

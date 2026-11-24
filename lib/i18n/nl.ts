@@ -150,6 +150,7 @@ export const nl: Dict = {
       experience: "Vooral werkervaring, geen formeel diploma",
       none: "Geen van bovenstaande",
       salary: "Hoe verhoudt het brutosalaris zich tot de nationale drempel voor hooggekwalificeerden?",
+      salaryAmount: "Optioneel: brutojaarsalaris in de lokale munt, ter vergelijking met de officiële drempels",
       salaryHelp: "Drempels verschillen per land en per jaar. Kies 'boven' alleen als de werkgever dit heeft bevestigd.",
       salaryHigh: "Boven de drempel voor hooggekwalificeerden of de blauwe kaart",
       salaryStandard: "Marktconform salaris, onder die drempel",
@@ -169,6 +170,11 @@ export const nl: Dict = {
       startOver: "Opnieuw beginnen",
     },
     outcomes: {
+      salaryAssessment: {
+        blueCard: "Het salaris van {salary} {currency} ligt op of boven de drempel van de Europese blauwe kaart van {blueCard} {currency}.",
+        highlyQualified: "Het salaris van {salary} {currency} ligt onder de drempel van de blauwe kaart ({blueCard} {currency}) maar op of boven de nationale drempel voor hooggekwalificeerden van {highlyQualified} {currency}.",
+        none: "Het salaris van {salary} {currency} ligt onder de drempels (blauwe kaart: {blueCard} {currency}).",
+      },
       eu: {
         headline: "Geen vergunning nodig",
         route: "Vrij verkeer van burgers van de EU, de EER en Zwitserland",

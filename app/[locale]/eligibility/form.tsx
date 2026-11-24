@@ -47,13 +47,14 @@ export function EligibilityForm() {
     ];
   }, [q]);
 
+  const [salaryAmount, setSalaryAmount] = useState<string>("");
   const visible = useMemo(() => questions.filter((qq) => !qq.skipIf?.(answers)), [answers, questions]);
   const current = visible.find((qq) => !answers[qq.key]);
   const index = current ? visible.indexOf(current) : visible.length;
   const progress = Math.round((index / visible.length) * 100);
 
   if (done || !current) {
-    const result = evaluate(answers, d.eligibility.outcomes, cn, localize);
+    const result = evaluate(answers, d.eligibility.outcomes, cn, localize, salaryAmount ? Number(salaryAmount) : undefined);
     const tone = result.confidence === "high" ? "green" : result.confidence === "medium" ? "navy" : "gold";
     return (
       <div className="rounded-3xl border border-navy-900/10 bg-sand-50 p-8">
@@ -64,6 +65,7 @@ export function EligibilityForm() {
         <h2 className="mt-4 text-3xl font-semibold">{result.headline}</h2>
         <p className="mt-2 text-lg text-navy-800/85">{result.route}</p>
         <p className="mt-4 leading-relaxed text-navy-900">{result.summary}</p>
+        {result.salaryNote && <p className="mt-2 rounded-lg bg-navy-100 p-3 text-sm">{result.salaryNote}</p>}
         <div className="mt-8 grid gap-8 md:grid-cols-2">
           <div>
             <h3 className="font-semibold">{r.nextSteps}</h3>
@@ -121,6 +123,12 @@ export function EligibilityForm() {
       </div>
       <h2 className="mt-8 text-2xl font-semibold">{current.label}</h2>
       {current.help && <p className="mt-2 text-sm text-navy-800/70">{current.help}</p>}
+      {current.key === "salary" && (
+        <label className="mt-4 block text-sm">
+          {q.salaryAmount}
+          <input type="number" min={0} step={1000} value={salaryAmount} onChange={(e) => setSalaryAmount(e.target.value)} className="mt-1 w-full rounded-xl border border-navy-900/20 px-4 py-3 text-sm focus:border-navy-900 focus:outline-none" placeholder="48000" />
+        </label>
+      )}
       {current.key === "country" ? (
         <div className="mt-6">
           <label htmlFor="country-select" className="sr-only">{q.country}</label>
