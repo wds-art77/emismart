@@ -6,6 +6,10 @@ import { hashToken, baseUrl } from "@/lib/auth";
 import { dispatch } from "@/lib/workflows";
 import { countryByCode, type CountryCode } from "@/lib/countries";
 import type { Locale } from "@/lib/i18n";
+import { classify, type DocMeta } from "@/lib/documents/types";
+import { languageCodes, validateDocument } from "@/lib/documents/validate";
+import { getCountryRules } from "@/lib/rules/registry";
+import "@/lib/rules/countries";
 
 // Case service: everything the dashboard does with a case goes through here, with access checks.
 
@@ -29,7 +33,7 @@ export async function createOrganisation(userId: string, name: string, type: "em
   return id;
 }
 
-/** Determine how a user may access a case: through their organisation or as a named member. */
+/** Determine how a user may access a case: as a named member, through the owning organisation, or through a counsel organisation linked to the case. */
 export async function caseAccess(userId: string, caseId: string): Promise<Access | null> {
   const db = await getDb();
   const [member] = await db.select().from(schema.caseMembers).where(and(eq(schema.caseMembers.caseId, caseId), eq(schema.caseMembers.userId, userId)));
@@ -37,9 +41,16 @@ export async function caseAccess(userId: string, caseId: string): Promise<Access
   const [c] = await db.select({ orgId: schema.cases.orgId }).from(schema.cases).where(eq(schema.cases.id, caseId));
   if (!c) return null;
   const [m] = await db.select().from(schema.memberships).where(and(eq(schema.memberships.orgId, c.orgId), eq(schema.memberships.userId, userId)));
-  if (!m) return null;
-  const [org] = await db.select().from(schema.organisations).where(eq(schema.organisations.id, c.orgId));
-  return { role: org?.type === "law_firm" ? "lawyer" : "employer", viaOrg: true };
+  if (m) {
+    const [org] = await db.select().from(schema.organisations).where(eq(schema.organisations.id, c.orgId));
+    return { role: org?.type === "law_firm" ? "lawyer" : "employer", viaOrg: true };
+  }
+  const [counsel] = await db
+    .select({ role: schema.caseOrgs.role })
+    .from(schema.caseOrgs)
+    .innerJoin(schema.memberships, eq(schema.memberships.orgId, schema.caseOrgs.orgId))
+    .where(and(eq(schema.caseOrgs.caseId, caseId), eq(schema.memberships.userId, userId)));
+  return counsel ? { role: counsel.role, viaOrg: true } : null;
 }
 
 export async function listCasesFor(userId: string) {
@@ -47,6 +58,10 @@ export async function listCasesFor(userId: string) {
   const orgs = await userOrgs(userId);
   const orgIds = orgs.map((o) => o.org.id);
   const memberCaseIds = (await db.select({ id: schema.caseMembers.caseId }).from(schema.caseMembers).where(eq(schema.caseMembers.userId, userId))).map((r) => r.id);
+  if (orgIds.length) {
+    const counsel = await db.select({ id: schema.caseOrgs.caseId }).from(schema.caseOrgs).where(inArray(schema.caseOrgs.orgId, orgIds));
+    memberCaseIds.push(...counsel.map((r) => r.id));
+  }
   const where = [] as ReturnType<typeof eq>[];
   if (orgIds.length) where.push(inArray(schema.cases.orgId, orgIds));
   if (memberCaseIds.length) where.push(inArray(schema.cases.id, memberCaseIds));
@@ -101,15 +116,17 @@ export async function getCase(userId: string, caseId: string) {
   const db = await getDb();
   const [c] = await db.select().from(schema.cases).where(eq(schema.cases.id, caseId));
   if (!c) return null;
-  const [milestones, documents, events, members, invitations, org] = await Promise.all([
+  const [milestones, documents, events, members, invitations, org, comments, counselOrgs] = await Promise.all([
     db.select().from(schema.milestones).where(eq(schema.milestones.caseId, caseId)).orderBy(schema.milestones.position),
     db.select().from(schema.documents).where(eq(schema.documents.caseId, caseId)),
     db.select({ e: schema.events, actorEmail: schema.users.email }).from(schema.events).leftJoin(schema.users, eq(schema.users.id, schema.events.actorUserId)).where(eq(schema.events.caseId, caseId)).orderBy(desc(schema.events.createdAt)).limit(100),
     db.select({ email: schema.users.email, name: schema.users.name, role: schema.caseMembers.role }).from(schema.caseMembers).innerJoin(schema.users, eq(schema.users.id, schema.caseMembers.userId)).where(eq(schema.caseMembers.caseId, caseId)),
     db.select().from(schema.invitations).where(and(eq(schema.invitations.caseId, caseId), isNull(schema.invitations.acceptedAt), gt(schema.invitations.expiresAt, new Date()))),
     db.select().from(schema.organisations).where(eq(schema.organisations.id, c.orgId)).then((r) => r[0]),
+    db.select({ c: schema.comments, email: schema.users.email, name: schema.users.name }).from(schema.comments).innerJoin(schema.users, eq(schema.users.id, schema.comments.userId)).where(eq(schema.comments.caseId, caseId)).orderBy(desc(schema.comments.createdAt)).limit(200),
+    db.select({ name: schema.organisations.name, role: schema.caseOrgs.role }).from(schema.caseOrgs).innerJoin(schema.organisations, eq(schema.organisations.id, schema.caseOrgs.orgId)).where(eq(schema.caseOrgs.caseId, caseId)),
   ]);
-  return { case: c, access, milestones, documents, events, members, invitations, org };
+  return { case: c, access, milestones, documents, events, members, invitations, org, comments, counselOrgs, nextActions: nextActions(c, milestones, documents) };
 }
 
 export async function setMilestone(userId: string, caseId: string, milestoneId: string, patch: { status?: "todo" | "doing" | "done"; date?: string | null; note?: string | null }) {
@@ -162,6 +179,11 @@ export async function acceptInvitation(userId: string, token: string): Promise<s
   if (!inv) return null;
   await db.insert(schema.caseMembers).values({ caseId: inv.caseId, userId, role: inv.role }).onConflictDoNothing();
   await db.update(schema.invitations).set({ acceptedAt: new Date() }).where(eq(schema.invitations.id, inv.id));
+  // A lawyer who belongs to a law firm brings the firm: colleagues see the case too (counsel organisation link).
+  if (inv.role === "lawyer") {
+    const firms = (await userOrgs(userId)).filter((o) => o.org.type === "law_firm");
+    for (const f of firms) await db.insert(schema.caseOrgs).values({ caseId: inv.caseId, orgId: f.org.id, role: "lawyer" }).onConflictDoNothing();
+  }
   await db.insert(schema.events).values({ id: newId("evt_"), caseId: inv.caseId, actorUserId: userId, type: "member.joined", payload: { role: inv.role } });
   return inv.caseId;
 }
@@ -202,7 +224,31 @@ export async function completeUpload(userId: string, caseId: string, documentId:
     .update(schema.documents)
     .set({ status: "uploaded", storageKey: key, filename: filename.slice(0, 200), mime, size, uploadedBy: userId, uploadedAt: new Date(), reviewNote: null, reviewedAt: null, reviewedBy: null })
     .where(and(eq(schema.documents.id, documentId), eq(schema.documents.caseId, caseId)));
+  await revalidateDocument(caseId, documentId);
   await dispatch({ type: "document.uploaded", caseId, actorUserId: userId, documentId });
+}
+
+/** Save document metadata (issuing country, dates, language, authentication) and run the validation rules. */
+export async function setDocumentMeta(userId: string, caseId: string, documentId: string, meta: DocMeta) {
+  const access = await caseAccess(userId, caseId);
+  if (!access) throw new Error("forbidden");
+  const db = await getDb();
+  const clean: Record<string, string> = {};
+  for (const [k, v] of Object.entries(meta)) if (v) clean[k] = String(v).slice(0, 80);
+  await db.update(schema.documents).set({ meta: clean }).where(and(eq(schema.documents.id, documentId), eq(schema.documents.caseId, caseId)));
+  await revalidateDocument(caseId, documentId);
+  await db.insert(schema.events).values({ id: newId("evt_"), caseId, actorUserId: userId, type: "document.details", payload: { documentId } });
+}
+
+export async function revalidateDocument(caseId: string, documentId: string) {
+  const db = await getDb();
+  const [c] = await db.select().from(schema.cases).where(eq(schema.cases.id, caseId));
+  const [doc] = await db.select().from(schema.documents).where(eq(schema.documents.id, documentId));
+  const country = c && countryByCode(c.country);
+  if (!c || !doc || !country) return;
+  const docType = classify(doc.label);
+  const checks = validateDocument(doc.label, doc.meta as DocMeta, { destination: c.country, intendedStart: c.startDate, acceptedLanguages: languageCodes(country.languages), rules: getCountryRules(c.country) }, !!doc.storageKey, docType);
+  await db.update(schema.documents).set({ docType, checks }).where(eq(schema.documents.id, documentId));
 }
 
 export async function reviewDocument(userId: string, caseId: string, documentId: string, status: "verified" | "rejected", note?: string) {
@@ -232,4 +278,38 @@ export async function listNotifications(userId: string) {
 export async function markNotificationsRead(userId: string) {
   const db = await getDb();
   await db.update(schema.notifications).set({ readAt: new Date() }).where(and(eq(schema.notifications.userId, userId), isNull(schema.notifications.readAt)));
+}
+
+// Comments
+
+export async function addComment(userId: string, caseId: string, body: string) {
+  const access = await caseAccess(userId, caseId);
+  if (!access) throw new Error("forbidden");
+  const text = body.trim().slice(0, 4000);
+  if (!text) return;
+  const db = await getDb();
+  await db.insert(schema.comments).values({ id: newId("cmt_"), caseId, userId, body: text });
+  await db.update(schema.cases).set({ updatedAt: new Date() }).where(eq(schema.cases.id, caseId));
+  await dispatch({ type: "comment.added", caseId, actorUserId: userId, excerpt: text.slice(0, 120) });
+}
+
+// Next actions: what each party should do now, derived from the state of the case.
+
+export type NextAction = { party: "employer" | "employee" | "lawyer" | "authority"; code: "upload" | "review" | "milestone" | "file" | "details" | "wait"; label?: string; count?: number };
+
+export function nextActions(c: schema.Case, milestones: schema.Milestone[], documents: schema.Document[]): NextAction[] {
+  const out: NextAction[] = [];
+  if (c.status === "closed") return out;
+  for (const party of ["employer", "employee"] as const) {
+    const toUpload = documents.filter((d) => d.party === party && (d.status === "requested" || d.status === "rejected"));
+    if (toUpload.length) out.push({ party, code: "upload", count: toUpload.length });
+    const noDetails = documents.filter((d) => d.party === party && d.status !== "requested" && d.checks.some((x) => x.code === "meta_missing"));
+    if (noDetails.length) out.push({ party, code: "details", count: noDetails.length });
+  }
+  const toReview = documents.filter((d) => d.status === "uploaded");
+  if (toReview.length) out.push({ party: "employer", code: "review", count: toReview.length });
+  const next = milestones.find((m) => m.status !== "done");
+  if (next) out.push({ party: next.actor === "Employee" ? "employee" : next.actor === "Authority" ? "authority" : "employer", code: next.actor === "Authority" ? "wait" : "milestone", label: next.title });
+  if (!c.filedOn && documents.length && documents.every((d) => d.status === "verified")) out.push({ party: "employer", code: "file" });
+  return out;
 }

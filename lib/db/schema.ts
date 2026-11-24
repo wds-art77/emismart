@@ -113,12 +113,30 @@ export const documents = pgTable("documents", {
   filename: text("filename"),
   mime: text("mime"),
   size: integer("size"),
+  docType: text("doc_type"),
+  meta: jsonb("meta").$type<Record<string, string>>().notNull().default({}),
+  checks: jsonb("checks").$type<{ code: string; level: string; params?: Record<string, string | number> }[]>().notNull().default([]),
   uploadedBy: text("uploaded_by").references(() => users.id),
   uploadedAt: timestamp("uploaded_at", { withTimezone: true }),
   reviewedBy: text("reviewed_by").references(() => users.id),
   reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
   reviewNote: text("review_note"),
 }, (t) => [index("documents_case_idx").on(t.caseId)]);
+
+export const comments = pgTable("comments", {
+  id: text("id").primaryKey(),
+  caseId: text("case_id").notNull().references(() => cases.id, { onDelete: "cascade" }),
+  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  body: text("body").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (t) => [index("comments_case_idx").on(t.caseId)]);
+
+export const caseOrgs = pgTable("case_orgs", {
+  caseId: text("case_id").notNull().references(() => cases.id, { onDelete: "cascade" }),
+  orgId: text("org_id").notNull().references(() => organisations.id, { onDelete: "cascade" }),
+  role: caseRole("role").notNull().default("lawyer"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (t) => [primaryKey({ columns: [t.caseId, t.orgId] })]);
 
 export const events = pgTable("events", {
   id: text("id").primaryKey(),
@@ -147,4 +165,5 @@ export type Case = typeof cases.$inferSelect;
 export type Milestone = typeof milestones.$inferSelect;
 export type Document = typeof documents.$inferSelect;
 export type Event = typeof events.$inferSelect;
+export type Comment = typeof comments.$inferSelect;
 export type Notification = typeof notifications.$inferSelect;

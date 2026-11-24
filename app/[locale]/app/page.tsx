@@ -57,6 +57,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
                 <th className="px-4 py-3">{d.app.colProgress}</th>
                 <th className="px-4 py-3">{d.app.colDocuments}</th>
                 <th className="px-4 py-3">{d.app.colDue}</th>
+                <th className="px-4 py-3">{d.app.colNext}</th>
               </tr>
             </thead>
             <tbody>
@@ -77,6 +78,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
                       {c.docsToReview > 0 && <Pill tone="gold">{c.docsToReview}</Pill>}
                     </td>
                     <td className="px-4 py-3">{c.decisionDue ?? "—"}</td>
+                    <td className="px-4 py-3 text-xs text-navy-800/80">{c.docsToReview > 0 ? fmt(d.app.nextLabels.review, { count: c.docsToReview }) : c.docsTotal - c.docsReady > 0 ? fmt(d.app.nextLabels.upload, { count: c.docsTotal - c.docsReady }) : c.status === "filed" ? d.app.nextLabels.wait.replace(": {label}", "") : "—"}</td>
                   </tr>
                 );
               })}

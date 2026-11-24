@@ -134,3 +134,27 @@ export async function markReadAction(fd: FormData) {
   await cases.markNotificationsRead(user.id);
   revalidatePath(`/${l}/app/notifications`);
 }
+
+export async function setDocumentMetaAction(fd: FormData) {
+  const l = loc(fd);
+  const user = await requireUser(l);
+  const caseId = str(fd, "caseId");
+  await cases.setDocumentMeta(user.id, caseId, str(fd, "documentId"), {
+    issuingCountry: str(fd, "issuingCountry") || undefined,
+    documentNumber: str(fd, "documentNumber") || undefined,
+    issueDate: str(fd, "issueDate") || undefined,
+    expiryDate: str(fd, "expiryDate") || undefined,
+    language: str(fd, "language") || undefined,
+    legalised: (str(fd, "legalised") || undefined) as "none" | "apostille" | "legalisation" | "not_required" | undefined,
+    translated: (str(fd, "translated") || undefined) as "none" | "certified" | "sworn" | undefined,
+  });
+  revalidatePath(`/${l}/app/cases/${caseId}`);
+}
+
+export async function addCommentAction(fd: FormData) {
+  const l = loc(fd);
+  const user = await requireUser(l);
+  const caseId = str(fd, "caseId");
+  await cases.addComment(user.id, caseId, str(fd, "body"));
+  revalidatePath(`/${l}/app/cases/${caseId}`);
+}

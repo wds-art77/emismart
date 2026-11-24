@@ -18,7 +18,8 @@ export type WorkflowEvent =
   | { type: "document.uploaded"; caseId: string; actorUserId: string; documentId: string }
   | { type: "document.reviewed"; caseId: string; actorUserId: string; documentId: string; status: string }
   | { type: "member.invited"; caseId: string; actorUserId: string; email: string; role: string; link: string }
-  | { type: "review.requested"; caseId: string; actorUserId: string };
+  | { type: "review.requested"; caseId: string; actorUserId: string }
+  | { type: "comment.added"; caseId: string; actorUserId: string; excerpt: string };
 
 type Handler = (e: WorkflowEvent) => Promise<void>;
 
@@ -30,6 +31,7 @@ const handlers: Partial<Record<WorkflowEvent["type"], Handler[]>> = {
   "document.reviewed": [notifyUploader],
   "member.invited": [sendInvitationMail],
   "review.requested": [escalateToLawyer],
+  "comment.added": [notifyComment],
 };
 
 export async function dispatch(event: WorkflowEvent): Promise<void> {
@@ -130,6 +132,15 @@ async function escalateToLawyer(e: WorkflowEvent) {
   const to = process.env.REVIEW_EMAIL ?? process.env.NEXT_PUBLIC_REVIEW_EMAIL ?? "weds@desaeger.be";
   if (to && lawyers.length === 0) {
     await sendMail({ to, subject: `Emismart review requested: ${c.reference}`, text: `A review was requested for case ${c.reference} (${c.employeeName}, ${c.country.toUpperCase()}).\n\n${baseUrl()}/en/app/cases/${c.id}` });
+  }
+}
+
+async function notifyComment(e: WorkflowEvent) {
+  if (e.type !== "comment.added") return;
+  const [c] = await (await getDb()).select().from(schema.cases).where(eq(schema.cases.id, e.caseId));
+  for (const m of await caseMemberUsers(e.caseId)) {
+    if (m.id === e.actorUserId) continue;
+    await notify(m.id, e.caseId, "comment.added", `New comment on ${c?.reference ?? "a case"}`, e.excerpt);
   }
 }
 

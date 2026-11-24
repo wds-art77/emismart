@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://www.emismart.com";
   const now = new Date();
   const staticPages = ["", "/countries", "/eligibility", "/checklist", "/start", "/how-it-works", "/blue-card", "/employers", "/pricing", "/about", "/legal"];
-  const paths = [...staticPages, ...countries.map((c) => `/countries/${c.code}`)];
+  const paths = [...staticPages, ...countries.map((c) => `/countries/${c.code}`), ...countries.map((c) => `/countries/${c.code}/rules`)];
   return paths.flatMap((p) =>
     locales.map((l) => ({
       url: `${base}/${l}${p}`,

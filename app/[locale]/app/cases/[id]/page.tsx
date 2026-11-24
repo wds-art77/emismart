@@ -7,13 +7,17 @@ import { dicts, fmt, isLocale } from "@/lib/i18n";
 import { Link } from "@/components/link";
 import { Pill } from "@/components/ui";
 import { UploadButton } from "@/components/upload-button";
-import { downloadAction, fileCaseAction, inviteAction, requestDocumentAction, requestReviewAction, reviewDocumentAction, setStatusAction, updateMilestoneAction } from "../../actions";
+import { addCommentAction, downloadAction, fileCaseAction, inviteAction, requestDocumentAction, requestReviewAction, reviewDocumentAction, setDocumentMetaAction, setStatusAction, updateMilestoneAction } from "../../actions";
+import { docTypeFields, type DocMeta, type DocType } from "@/lib/documents/types";
+import { summarise } from "@/lib/documents/validate";
+import { isoCountries, commonLanguages } from "@/lib/documents/iso";
 
 export const dynamic = "force-dynamic";
 
 const statusTone = { draft: "grey", collecting: "navy", filed: "gold", decided: "green", closed: "grey" } as const;
 const docTone = { requested: "grey", uploaded: "gold", verified: "green", rejected: "navy" } as const;
-type Tab = "overview" | "milestones" | "documents" | "parties" | "activity";
+type Tab = "overview" | "milestones" | "documents" | "parties" | "discussion" | "activity";
+const checkTone = { pass: "green", warn: "gold", fail: "navy", info: "grey" } as const;
 
 export default async function CasePage({ params, searchParams }: { params: Promise<{ locale: string; id: string }>; searchParams: Promise<{ tab?: string }> }) {
   const { locale: l, id } = await params;
@@ -23,13 +27,18 @@ export default async function CasePage({ params, searchParams }: { params: Promi
   const user = await requireUser(locale, `/${locale}/app/cases/${id}`);
   const data = await getCase(user.id, id);
   if (!data) notFound();
-  const { case: c, access, milestones, documents, events, members, invitations, org } = data;
+  const { case: c, access, milestones, documents, events, members, invitations, org, comments, counselOrgs, nextActions } = data;
   const raw = countryByCode(c.country);
   const country = raw ? localizeCountry(raw, locale) : null;
   const tab = ((await searchParams).tab ?? "overview") as Tab;
   const canEdit = access.role !== "employee";
   const done = milestones.filter((m) => m.status === "done").length;
   const deadline = localizedDeadline(c.country as never, locale);
+  const readiness = { pass: 0, warn: 0, fail: 0 };
+  for (const doc of documents) { const lvl = summarise(doc.checks as never); if (lvl in readiness) readiness[lvl as keyof typeof readiness]++; }
+  const regionNames = new Intl.DisplayNames([locale], { type: "region" });
+  const langNames = new Intl.DisplayNames([locale], { type: "language" });
+  const checkText = (chk: { code: string; params?: Record<string, string | number> }) => fmt((a.checks as Record<string, string>)[chk.code] ?? chk.code, chk.params);
   // Generated documents keep their English label in the database; show the localized label by position.
   const localizedDoc = (party: "employer" | "employee", label: string) => {
     const source = party === "employer" ? raw?.employerDocs : raw?.employeeDocs;
@@ -67,7 +76,7 @@ export default async function CasePage({ params, searchParams }: { params: Promi
       {access.role === "employee" && <p className="mt-4 rounded-xl bg-navy-100 p-3 text-sm">{a.employeeHint}</p>}
 
       <div className="mt-6 flex flex-wrap gap-2 border-b border-navy-900/10">
-        {(["overview", "milestones", "documents", "parties", "activity"] as Tab[]).map((t) => (
+        {(["overview", "milestones", "documents", "parties", "discussion", "activity"] as Tab[]).map((t) => (
           <Link key={t} href={`/app/cases/${c.id}?tab=${t}`} className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium ${tab === t ? "border-navy-900 text-navy-900" : "border-transparent text-navy-800/60 hover:text-navy-900"}`}>{a.tabs[t]}</Link>
         ))}
       </div>
@@ -88,6 +97,31 @@ export default async function CasePage({ params, searchParams }: { params: Promi
               ) : null}
               <p className="mt-3 text-xs text-navy-800/70">{deadline?.note ?? country?.decisionPeriod}</p>
             </div>
+            <div className="rounded-2xl border border-navy-900/10 bg-white p-5">
+              <h2 className="font-semibold">{a.nextActions}</h2>
+              <ul className="mt-3 space-y-2 text-sm">
+                {nextActions.length === 0 && <li className="text-navy-800/60">—</li>}
+                {nextActions.map((n, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <Pill tone={n.party === "authority" ? "grey" : n.party === "employee" ? "gold" : "navy"}>{a.partyLabel[n.party]}</Pill>
+                    <span>{fmt(a.nextLabels[n.code], { count: n.count ?? 0, label: (n.label && country?.steps[milestones.findIndex((m) => m.title === n.label)]?.title) || n.label || "" })}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-navy-900/10 bg-white p-5">
+              <h2 className="font-semibold">{a.readiness}</h2>
+              <p className="mt-2 text-sm">{fmt(a.readinessCounts, readiness)}</p>
+              <div className="mt-3 flex h-2 w-full overflow-hidden rounded-full bg-navy-100">
+                {documents.length > 0 && (
+                  <>
+                    <div className="bg-emerald-600" style={{ width: `${(readiness.pass / documents.length) * 100}%` }} />
+                    <div className="bg-gold-500" style={{ width: `${(readiness.warn / documents.length) * 100}%` }} />
+                    <div className="bg-red-500" style={{ width: `${(readiness.fail / documents.length) * 100}%` }} />
+                  </>
+                )}
+              </div>
+            </div>
             <dl className="grid gap-3 text-sm sm:grid-cols-2">
               {[[a.nationality, c.nationality], [a.jobTitle, c.jobTitle], [a.startDate, c.startDate], [d.tracker.fields.opened, new Date(c.createdAt).toLocaleDateString(locale)]].map(([k, v]) => (
                 <div key={k} className="rounded-xl bg-white p-4"><dt className="text-xs uppercase tracking-wider text-navy-800/60">{k}</dt><dd className="mt-1 font-medium">{v || "—"}</dd></div>
@@ -103,6 +137,8 @@ export default async function CasePage({ params, searchParams }: { params: Promi
                 <form action={setStatusAction}>{hidden({ status: c.status === "closed" ? "collecting" : "closed" })}<button className={`${btn2} w-full`}>{c.status === "closed" ? a.reopen : a.close}</button></form>
               </>
             )}
+            <a href={`/api/cases/${c.id}/dossier?locale=${locale}`} className={`${btn2} block text-center`}>{a.exportDossier}</a>
+            <a href={`/api/cases/${c.id}/audit?locale=${locale}`} className={`${btn2} block text-center`}>{a.exportAudit}</a>
             <Link href={`/countries/${c.country}`} className="block text-center text-sm font-semibold text-navy-900 underline-offset-4 hover:underline">{d.eligibility.result.guide}</Link>
           </div>
         </div>
@@ -159,6 +195,31 @@ export default async function CasePage({ params, searchParams }: { params: Promi
                         {(localizedDoc(party, doc.label)?.note ?? doc.note) && <p className="text-xs text-navy-800/60">{localizedDoc(party, doc.label)?.note ?? doc.note}</p>}
                         {doc.filename && <p className="mt-1 text-xs text-navy-800/70">{doc.filename} · {Math.round((doc.size ?? 0) / 1024)} KB · {doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleDateString(locale) : ""}</p>}
                         {doc.reviewNote && doc.status === "rejected" && <p className="mt-1 text-xs text-red-700">{doc.reviewNote}</p>}
+                        {doc.storageKey && doc.checks.length > 0 && (
+                          <ul className="mt-2 space-y-1">
+                            {doc.checks.filter((x) => x.code !== "missing").map((x, i) => (
+                              <li key={i} className="flex items-start gap-2 text-xs"><Pill tone={checkTone[x.level as keyof typeof checkTone] ?? "grey"}>{x.level}</Pill><span className="text-navy-800/80">{checkText(x)}</span></li>
+                            ))}
+                          </ul>
+                        )}
+                        {doc.storageKey && docTypeFields[(doc.docType ?? "other") as DocType].length > 0 && (canEdit || party === "employee") && (
+                          <details className="mt-2 text-xs">
+                            <summary className="cursor-pointer font-semibold text-navy-900">{a.details}</summary>
+                            <form action={setDocumentMetaAction} className="mt-2 grid gap-2 sm:grid-cols-3">
+                              {hidden({ documentId: doc.id })}
+                              {docTypeFields[(doc.docType ?? "other") as DocType].map((f) => {
+                                const meta = doc.meta as DocMeta;
+                                const label = a.meta[f];
+                                if (f === "issuingCountry") return <label key={f}>{label}<select name={f} defaultValue={meta[f] ?? ""} className={`${input} mt-1 w-full`}><option value="">—</option>{isoCountries.map((cc) => <option key={cc} value={cc}>{regionNames.of(cc) ?? cc}</option>)}</select></label>;
+                                if (f === "language") return <label key={f}>{label}<select name={f} defaultValue={meta[f] ?? ""} className={`${input} mt-1 w-full`}><option value="">—</option>{commonLanguages.map((lc) => <option key={lc} value={lc}>{langNames.of(lc) ?? lc}</option>)}</select></label>;
+                                if (f === "legalised") return <label key={f}>{label}<select name={f} defaultValue={meta[f] ?? ""} className={`${input} mt-1 w-full`}><option value="">—</option>{(["none", "apostille", "legalisation", "not_required"] as const).map((o) => <option key={o} value={o}>{a.legalisedOptions[o]}</option>)}</select></label>;
+                                if (f === "translated") return <label key={f}>{label}<select name={f} defaultValue={meta[f] ?? ""} className={`${input} mt-1 w-full`}><option value="">—</option>{(["none", "certified", "sworn"] as const).map((o) => <option key={o} value={o}>{a.translatedOptions[o]}</option>)}</select></label>;
+                                return <label key={f}>{label}<input name={f} type={f.endsWith("Date") ? "date" : "text"} defaultValue={meta[f] ?? ""} className={`${input} mt-1 w-full`} /></label>;
+                              })}
+                              <div className="sm:col-span-3"><button className={btn}>{a.saveDetails}</button></div>
+                            </form>
+                          </details>
+                        )}
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <Pill tone={docTone[doc.status]}>{a.docStatus[doc.status]}</Pill>
@@ -199,6 +260,7 @@ export default async function CasePage({ params, searchParams }: { params: Promi
             <h2 className="font-semibold">{a.members}</h2>
             <ul className="mt-3 space-y-2 text-sm">
               <li className="flex justify-between"><span>{org?.name}</span><Pill>{a.organisation}</Pill></li>
+              {counselOrgs.map((o) => <li key={o.name} className="flex justify-between"><span>{o.name}</span><Pill tone="green">{a.counsel}</Pill></li>)}
               {members.map((m) => <li key={m.email} className="flex justify-between"><span>{m.name ?? m.email}</span><Pill tone="gold">{a.roles[m.role]}</Pill></li>)}
               {invitations.map((i) => <li key={i.id} className="flex justify-between text-navy-800/60"><span>{i.email}</span><span className="text-xs">{a.roles[i.role]} · {a.invitePending}</span></li>)}
             </ul>
@@ -211,6 +273,26 @@ export default async function CasePage({ params, searchParams }: { params: Promi
               <button className={btn}>{a.invite}</button>
             </form>
           )}
+        </div>
+      )}
+
+      {tab === "discussion" && (
+        <div className="mt-6 max-w-3xl space-y-4">
+          <form action={addCommentAction} className="rounded-2xl border border-navy-900/10 bg-white p-4">
+            {hidden()}
+            <label htmlFor="body" className="block text-sm font-medium">{a.writeComment}</label>
+            <textarea id="body" name="body" required rows={3} className="mt-1 w-full rounded-xl border border-navy-900/20 px-3 py-2 text-sm focus:border-navy-900 focus:outline-none" />
+            <button className={`${btn} mt-2`}>{a.post}</button>
+          </form>
+          <ul className="space-y-3">
+            {comments.length === 0 && <li className="text-sm text-navy-800/70">{a.noComments}</li>}
+            {comments.map(({ c: cm, email, name }) => (
+              <li key={cm.id} className="rounded-2xl border border-navy-900/10 bg-white p-4">
+                <div className="flex justify-between gap-3 text-xs text-navy-800/60"><span className="font-medium text-navy-900">{name ?? email}</span><span>{new Date(cm.createdAt).toLocaleString(locale)}</span></div>
+                <p className="mt-2 whitespace-pre-wrap text-sm">{cm.body}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
