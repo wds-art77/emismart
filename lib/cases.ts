@@ -1,6 +1,6 @@
 import "server-only";
 import { randomBytes } from "node:crypto";
-import { and, desc, eq, gt, isNull, or, inArray } from "drizzle-orm";
+import { and, count, desc, eq, gt, isNull, or, inArray } from "drizzle-orm";
 import { getDb, newId, schema } from "@/lib/db";
 import { hashToken, baseUrl } from "@/lib/auth";
 import { dispatch } from "@/lib/workflows";
@@ -118,7 +118,7 @@ export async function getCase(userId: string, caseId: string) {
   if (!c) return null;
   const [milestones, documents, events, members, invitations, org, comments, counselOrgs] = await Promise.all([
     db.select().from(schema.milestones).where(eq(schema.milestones.caseId, caseId)).orderBy(schema.milestones.position),
-    db.select().from(schema.documents).where(eq(schema.documents.caseId, caseId)),
+    db.select().from(schema.documents).where(eq(schema.documents.caseId, caseId)).orderBy(schema.documents.position, schema.documents.label),
     db.select({ e: schema.events, actorEmail: schema.users.email }).from(schema.events).leftJoin(schema.users, eq(schema.users.id, schema.events.actorUserId)).where(eq(schema.events.caseId, caseId)).orderBy(desc(schema.events.createdAt)).limit(100),
     db.select({ email: schema.users.email, name: schema.users.name, role: schema.caseMembers.role }).from(schema.caseMembers).innerJoin(schema.users, eq(schema.users.id, schema.caseMembers.userId)).where(eq(schema.caseMembers.caseId, caseId)),
     db.select().from(schema.invitations).where(and(eq(schema.invitations.caseId, caseId), isNull(schema.invitations.acceptedAt), gt(schema.invitations.expiresAt, new Date()))),
@@ -195,7 +195,8 @@ export async function requestDocument(userId: string, caseId: string, party: "em
   if (!access || access.role === "employee") throw new Error("forbidden");
   const db = await getDb();
   const id = newId("doc_");
-  await db.insert(schema.documents).values({ id, caseId, party, label: label.trim().slice(0, 200), note: note?.trim() || null });
+  const [{ n }] = await db.select({ n: count() }).from(schema.documents).where(eq(schema.documents.caseId, caseId));
+  await db.insert(schema.documents).values({ id, caseId, party, position: 1000 + n, label: label.trim().slice(0, 200), note: note?.trim() || null });
   await db.insert(schema.events).values({ id: newId("evt_"), caseId, actorUserId: userId, type: "document.requested", payload: { documentId: id, label } });
   return id;
 }

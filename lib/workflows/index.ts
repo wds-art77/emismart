@@ -50,8 +50,8 @@ async function generateMilestonesAndDocuments(e: WorkflowEvent) {
   if (!country) return;
   await db.insert(schema.milestones).values(country.steps.map((s, i) => ({ id: newId("ms_"), caseId: c.id, position: i, title: s.title, actor: s.actor })));
   await db.insert(schema.documents).values([
-    ...country.employerDocs.map((d) => ({ id: newId("doc_"), caseId: c.id, party: "employer" as const, label: d.label, note: d.note ?? null })),
-    ...country.employeeDocs.map((d) => ({ id: newId("doc_"), caseId: c.id, party: "employee" as const, label: d.label, note: d.note ?? null })),
+    ...country.employerDocs.map((d, i) => ({ id: newId("doc_"), caseId: c.id, party: "employer" as const, position: i, label: d.label, note: d.note ?? null })),
+    ...country.employeeDocs.map((d, i) => ({ id: newId("doc_"), caseId: c.id, party: "employee" as const, position: 100 + i, label: d.label, note: d.note ?? null })),
   ]);
   await db.update(schema.cases).set({ status: "collecting", updatedAt: new Date() }).where(eq(schema.cases.id, c.id));
 }

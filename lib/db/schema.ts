@@ -105,6 +105,7 @@ export const documents = pgTable("documents", {
   id: text("id").primaryKey(),
   caseId: text("case_id").notNull().references(() => cases.id, { onDelete: "cascade" }),
   party: party("party").notNull(),
+  position: integer("position").notNull().default(1000),
   label: text("label").notNull(),
   note: text("note"),
   required: boolean("required").notNull().default(true),

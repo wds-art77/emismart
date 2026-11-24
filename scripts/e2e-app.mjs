@@ -91,17 +91,17 @@ try {
   const bytes = readFileSync(await download.path());
   check("download returns the uploaded bytes", bytes.toString().startsWith("%PDF-1.4"));
 
-  // Document details and validation checks
+  // Document details and validation checks (fresh navigation: the download above left the page on a redirect)
+  await page.goto(`${caseUrl}?tab=documents`);
   const details = employeeSection.locator("details").first();
   await details.locator("summary").click();
   await details.locator("select[name=issuingCountry]").selectOption("NG");
   await details.locator("input[name=documentNumber]").fill("A1234567");
   await details.locator("input[name=issueDate]").fill("2020-01-01");
   await details.locator("input[name=expiryDate]").fill("2027-02-01");
-  await Promise.all([page.waitForResponse((r) => r.request().method() === "POST"), details.getByRole("button", { name: "Save details" }).click()]);
-  await page.waitForLoadState("networkidle");
-  await page.reload();
-  const checksText = await employeeSection.locator("li").first().innerText();
+  await details.getByRole("button", { name: "Save details" }).click();
+  await page.waitForSelector("text=/Passport (expires|validity|expired)/", { timeout: 20000 });
+  const checksText = await employeeSection.locator("ul > li").first().innerText();
   check("validation checks run on the passport details", /Passport expires on 2027-02-01|Passport validity sufficient|Passport expired/.test(checksText), checksText.slice(0, 120));
   await page.goto(`${caseUrl}?tab=overview`);
   check("readiness summary shown", (await page.locator("text=Document readiness").count()) === 1 && (await page.locator("text=Next actions").count()) === 1);
