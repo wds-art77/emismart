@@ -14,6 +14,7 @@ import { it as it_ } from "./it";
 import { mt as mt_ } from "./mt";
 import { pl as pl_ } from "./pl";
 import { pt as pt_ } from "./pt";
+import { ro as ro_ } from "./ro";
 import { se as se_ } from "./se";
 import { si as si_ } from "./si";
 import { sk as sk_ } from "./sk";
@@ -32,8 +33,9 @@ registerRules(it_);
 registerRules(mt_);
 registerRules(pl_);
 registerRules(pt_);
+registerRules(ro_);
 registerRules(se_);
 registerRules(si_);
 registerRules(sk_);
 
-export const availableRules = ["at", "cy", "cz", "dk", "es", "fi", "gr", "hr", "hu", "ie", "it", "mt", "pl", "pt", "se", "si", "sk"] as const;
+export const availableRules = ["at", "cy", "cz", "dk", "es", "fi", "gr", "hr", "hu", "ie", "it", "mt", "pl", "pt", "ro", "se", "si", "sk"] as const;
